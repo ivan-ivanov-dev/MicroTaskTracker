@@ -1,4 +1,4 @@
-namespace MicroTaskTracker.Models
+namespace MicroTaskTracker.ViewModels
 {
     public class ErrorViewModel
     {

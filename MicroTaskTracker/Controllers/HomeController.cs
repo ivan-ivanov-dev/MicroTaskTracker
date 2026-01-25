@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MicroTaskTracker.Models;
+using MicroTaskTracker.ViewModels;
 
 namespace MicroTaskTracker.Controllers
 {
