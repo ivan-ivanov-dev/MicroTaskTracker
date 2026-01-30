@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MicroTaskTracker.ViewModels;
-
+using MicroTaskTracker.Models.ViewModels;
 namespace MicroTaskTracker.Controllers
 {
     public class HomeController : Controller

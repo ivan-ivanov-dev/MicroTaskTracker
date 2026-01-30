@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MicroTaskTracker.Data;
+using MicroTaskTracker.Models.DBModels;
 namespace MicroTaskTracker
 {
     public class Program
@@ -11,9 +13,12 @@ namespace MicroTaskTracker
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            // Configure Entity Framework Core with SQL Server(DI)
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             var app = builder.Build();
 
@@ -30,6 +35,7 @@ namespace MicroTaskTracker
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
