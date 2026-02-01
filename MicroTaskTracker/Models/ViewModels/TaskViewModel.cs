@@ -1,16 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MicroTaskTracker.Models.DBModels;
 
 namespace MicroTaskTracker.Models.ViewModels
 {
-    public class TaskEditViewModel
+    public class TaskViewModel
     {
         public int Id { get; set; }
-
-        [Required]
-        [StringLength(100)]
         public string Title { get; set; } = null!;
-        [StringLength(500)]
         public string? Description { get; set; }
         public DateTime? DueDate { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public TaskPriority Priority { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }
