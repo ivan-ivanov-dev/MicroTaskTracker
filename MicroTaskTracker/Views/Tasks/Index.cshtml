@@ -1,0 +1,50 @@
+﻿@model TaskListViewModel
+
+@{
+    ViewData["Title"] = "Task List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create Task</a>
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>Due</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th style="width:220px">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model.Tasks)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Priority</td>
+                <td>@(task.DueDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                <td>@task.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                <td>
+                    @if (task.IsCompleted)
+                    {
+                        <span class="badge bg-success">Completed</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Open</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-primary me-1">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-danger">Delete</a>
+                    <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-info me-1">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

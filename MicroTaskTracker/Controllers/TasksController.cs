@@ -14,22 +14,23 @@ namespace MicroTaskTracker.Controllers
         }
         public IActionResult Index()
         {
-            var tasks = new List<TaskViewModel>();
-            foreach (var task in _context.Tasks)
+            var tasks = _context.Tasks.Select(t => new TaskViewModel
             {
-                var model = new TaskViewModel
-                {
-                    Id = task.Id,
-                    Title = task.Title,
-                    Description = task.Description,
-                    IsCompleted = task.IsCompleted,
-                    CreatedOn = DateTime.Now,
-                    DueDate = task.DueDate,
-                    Priority = task.Priority
-                };
-                tasks.Add(model);
-            }
-            return View(tasks);
+                Id = t.Id,
+                Title = t.Title,
+                Description = t.Description,
+                DueDate = t.DueDate,
+                CreatedOn = t.CreatedOn,
+                IsCompleted = t.IsCompleted,
+                Priority = t.Priority
+            }).ToList();
+
+            var model = new TaskListViewModel
+            {
+                Tasks = tasks
+            };
+
+            return View(model);
         }
 
         /*Create Tasks*/
@@ -55,7 +56,7 @@ namespace MicroTaskTracker.Controllers
                 Title = model.Title,
                 Description = model.Description,
                 DueDate = model.DueDate,
-                CreatedOn = DateTime.Now,
+                CreatedOn = DateTime.UtcNow,
                 IsCompleted = false,
                 Priority = model.Priority
             };
@@ -135,13 +136,11 @@ namespace MicroTaskTracker.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Delete(int id, TaskDeleteViewModel model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(TaskDeleteViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var task = _context.Tasks.Find(id);
+            
+            var task = _context.Tasks.Find(model.Id);
             if (task == null)
             {
                 return NotFound();
@@ -153,6 +152,38 @@ namespace MicroTaskTracker.Controllers
             _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        /*View task details Tasks*/
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var task = _context.Tasks.Find(id);
+            if (task == null)
+            {
+                return NotFound();
+            }
+            
+            /*Implement authentication*/
+
+            var taskModel = new TaskViewModel
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                DueDate = task.DueDate,
+                CreatedOn = task.CreatedOn,
+                IsCompleted = task.IsCompleted,
+                Priority = task.Priority
+            };
+
+            var model = new TaskDetailsViewModel
+            {
+                Task = taskModel
+            };
+
+            return View(model);
         }
     }
 }
