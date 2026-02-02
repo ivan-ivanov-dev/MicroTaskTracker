@@ -135,7 +135,6 @@ namespace MicroTaskTracker.Controllers
             var model = new TaskDeleteViewModel
             {
                 Id = task.Id,
-                Title = task.Title
             };
 
             return View(model);
@@ -144,7 +143,6 @@ namespace MicroTaskTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAsync(TaskDeleteViewModel model)
         {
-            
             var task = await _context.Tasks.FindAsync(model.Id);
             if (task == null)
             {
