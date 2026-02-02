@@ -4,28 +4,28 @@
     ViewData["Title"] = "Task Details";
 }
 
-<h1>@Model.Task.Title</h1>
+<h1>@Model.Title</h1>
 
 <div class="mb-3">
     <strong>Description:</strong>
-    <p>@Model.Task.Description</p>
+    <p>@Model.Description</p>
 </div>
 
 <ul class="list-group mb-3">
-    <li class="list-group-item"><strong>Priority:</strong> @Model.Task.Priority</li>
+    <li class="list-group-item"><strong>Priority:</strong> @Model.Priority</li>
     <li class="list-group-item">
         <strong>Created:</strong>
-        @Model.Task.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd")
+        @Model.CreatedOn.ToLocalTime().ToString("yyyy-MM-dd")
     </li>
     <li class="list-group-item">
         <strong>Due:</strong>
-        @(Model.Task.DueDate?.ToString("yyyy-MM-dd") ?? "-")
+        @(Model.DueDate?.ToString("yyyy-MM-dd") ?? "-")
     </li>
     <li class="list-group-item">
         <strong>Status:</strong>
-        @(Model.Task.IsCompleted ? "Completed" : "Open")
+        @(Model.IsCompleted ? "Completed" : "Open")
     </li>
 </ul>
 
 <a asp-action="Index" class="btn btn-secondary">Back to list</a>
-<a asp-action="Edit" asp-route-id="@Model.Task.Id" class="btn btn-primary ms-2">Edit</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary ms-2">Edit</a>

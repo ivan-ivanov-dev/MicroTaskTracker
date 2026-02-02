@@ -1,7 +1,6 @@
 ﻿namespace MicroTaskTracker.Models.ViewModels
 {
-    public class TaskDetailsViewModel
+    public class TaskDetailsViewModel: TaskViewModel
     {
-        public TaskViewModel Task { get; set; } = null!;
     }
 }
