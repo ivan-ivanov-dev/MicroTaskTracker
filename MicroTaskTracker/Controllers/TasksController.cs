@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MicroTaskTracker.Data;
 using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace MicroTaskTracker.Controllers
 {
@@ -12,9 +14,9 @@ namespace MicroTaskTracker.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var tasks = _context.Tasks.Select(t => new TaskViewModel
+            var tasks =await _context.Tasks.Select(t => new TaskViewModel
             {
                 Id = t.Id,
                 Title = t.Title,
@@ -23,7 +25,7 @@ namespace MicroTaskTracker.Controllers
                 CreatedOn = t.CreatedOn,
                 IsCompleted = t.IsCompleted,
                 Priority = t.Priority
-            }).ToList();
+            }).ToListAsync();
 
             var model = new TaskListViewModel
             {
@@ -42,7 +44,7 @@ namespace MicroTaskTracker.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Create(TaskCreateViewModel model)
+        public async Task<IActionResult> CreateAsync(TaskCreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -60,8 +62,9 @@ namespace MicroTaskTracker.Controllers
                 IsCompleted = false,
                 Priority = model.Priority
             };
-            _context.Tasks.Add(task);
-            _context.SaveChanges();
+
+            await _context.Tasks.AddAsync(task);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -69,9 +72,11 @@ namespace MicroTaskTracker.Controllers
         /*Edit Tasks*/
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> EditAsync(int id)
         {
-            var task = _context.Tasks.Find(id);
+            var tasks = await _context.Tasks.ToListAsync();
+            var task = await _context.Tasks.FindAsync(id);
+
             if (task == null)
             {
                 return NotFound();
@@ -90,13 +95,13 @@ namespace MicroTaskTracker.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Edit(int id, TaskEditViewModel model)
+        public async Task<IActionResult> EditAsync(int id, TaskEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var task = _context.Tasks.Find(id);
+            var task = await _context.Tasks.FindAsync(id);
             if (task == null)
             {
                 return NotFound();
@@ -109,7 +114,7 @@ namespace MicroTaskTracker.Controllers
             task.DueDate = model.DueDate;
 
             _context.Tasks.Update(task);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -117,9 +122,9 @@ namespace MicroTaskTracker.Controllers
         /*Delete Tasks*/
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var task = _context.Tasks.Find(id);
+            var task = await _context.Tasks.FindAsync(id);
             if (task == null)
             {
                 return NotFound();
@@ -137,10 +142,10 @@ namespace MicroTaskTracker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(TaskDeleteViewModel model)
+        public async Task<IActionResult> DeleteAsync(TaskDeleteViewModel model)
         {
             
-            var task = _context.Tasks.Find(model.Id);
+            var task = await _context.Tasks.FindAsync(model.Id);
             if (task == null)
             {
                 return NotFound();
@@ -148,8 +153,8 @@ namespace MicroTaskTracker.Controllers
 
             /*Implement authentication*/
 
-            _context.Tasks.Remove(task);
-            _context.SaveChanges();
+             _context.Tasks.Remove(task);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
@@ -157,9 +162,9 @@ namespace MicroTaskTracker.Controllers
         /*View task details Tasks*/
 
         [HttpGet]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> DetailsAsync(int id)
         {
-            var task = _context.Tasks.Find(id);
+            var task = await _context.Tasks.FindAsync(id);
             if (task == null)
             {
                 return NotFound();
