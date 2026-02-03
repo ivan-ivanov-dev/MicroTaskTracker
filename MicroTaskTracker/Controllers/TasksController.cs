@@ -32,15 +32,33 @@ namespace MicroTaskTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(TaskCreateViewModel model)
         {
+            if (String.IsNullOrWhiteSpace(model.Title))
+            {
+                ModelState.AddModelError("Title", "The Title field is required.");
+            }
+            
+            if (model.DueDate.HasValue && model.DueDate.Value < DateTime.Now)
+            {
+                ModelState.AddModelError("DueDate", "Due date cannot be in the past.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
             /*Implement authentication*/
+            try
+            {
+                await _taskService.CreateAsync(model);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while creating the task: " + ex.Message);
+                return View(model);
+            }
 
-            await _taskService.CreateAsync(model);
-            return RedirectToAction(nameof(Index));
         }
 
         /*Edit Tasks*/
@@ -68,15 +86,33 @@ namespace MicroTaskTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> EditAsync(int id, TaskEditViewModel model)
         {
+            if (String.IsNullOrWhiteSpace(model.Title))
+            {
+                ModelState.AddModelError("Title", "The Title field is required.");
+            }
+
+            if (model.DueDate.HasValue && model.DueDate.Value < DateTime.Now)
+            {
+                ModelState.AddModelError("DueDate", "Due date cannot be in the past.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            
+
             /*Implement authentication*/
 
-            await _taskService.UpdateAsync(id, model);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _taskService.UpdateAsync(id, model);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while editing the task: " + ex.Message);
+                return View(model);
+            }
         }
 
         /*Delete Tasks*/

@@ -17,6 +17,7 @@ namespace MicroTaskTracker.Services.Implementations
         }
         public async Task CreateAsync(TaskCreateViewModel model)
         {
+            
             var task = new TaskItem
             {
                 Title = model.Title,
