@@ -1,43 +1,94 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels.Authentication;
+using System.Threading.Tasks;
 
 namespace MicroTaskTracker.Controllers
 {
     public class AccountController : Controller
     {
-        public IActionResult Index()
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            return View();
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
+
         [HttpGet]
-        public IActionResult Register(SignInViewModel signInViewModel)
+        [AllowAnonymous]
+        public IActionResult Register()
         {
-            // Registration logic here
             return View();
         }
+
         [HttpPost]
-        public IActionResult Register(SignInViewModel signInViewModel,string email, string password)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterAsync(SignInViewModel signInViewModel)
         {
-            // Registration logic here
-            return View();
+            if(!ModelState.IsValid)
+            {
+                return View(signInViewModel);
+            }
+            var user = new ApplicationUser
+            {
+                UserName = signInViewModel.Email,
+                Email = signInViewModel.Email
+            };
+            var result = await _userManager.CreateAsync(user, signInViewModel.Password);
+            if(result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+
+            foreach(var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View(signInViewModel);
         }
+
         [HttpGet]
-        public IActionResult Login(LoginViewModel loginViewModel)
+        [AllowAnonymous]
+        public IActionResult Login()
         {
-            // Login logic here
             return View();
         }
-        [HttpGet]
-        public IActionResult Login(LoginViewModel loginViewModel,string email, string password)
-        {
-            // Login logic here
-            return View();
-        }
+
         [HttpPost]
-        public IActionResult Logout()
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            // Logout logic here
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return View(loginViewModel);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("", "Invalid login attempt.");
+
+            return View(loginViewModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
         }
     }
 }
