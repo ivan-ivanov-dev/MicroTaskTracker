@@ -20,7 +20,7 @@ namespace MicroTaskTracker
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            
             builder.Services.AddScoped<ITaskService, TaskService>();
 
             builder.Services.AddControllersWithViews();
