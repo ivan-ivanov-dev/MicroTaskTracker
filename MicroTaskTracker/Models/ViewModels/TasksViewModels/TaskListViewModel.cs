@@ -1,4 +1,4 @@
-﻿namespace MicroTaskTracker.Models.ViewModels
+﻿namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
 {
     public class TaskListViewModel: TaskViewModel
     {

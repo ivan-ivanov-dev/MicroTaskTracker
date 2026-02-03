@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\ViewModels\NewFolder1\**" />
     <Compile Remove="Views\Tasks\NewFolder\**" />
+    <Content Remove="Models\ViewModels\NewFolder1\**" />
     <Content Remove="Views\Tasks\NewFolder\**" />
+    <EmbeddedResource Remove="Models\ViewModels\NewFolder1\**" />
     <EmbeddedResource Remove="Views\Tasks\NewFolder\**" />
+    <None Remove="Models\ViewModels\NewFolder1\**" />
     <None Remove="Views\Tasks\NewFolder\**" />
   </ItemGroup>
 
@@ -21,6 +25,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\ViewModels\Authentication\" />
   </ItemGroup>
 
 </Project>

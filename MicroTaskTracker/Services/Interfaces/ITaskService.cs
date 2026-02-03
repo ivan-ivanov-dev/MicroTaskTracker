@@ -1,5 +1,5 @@
 ﻿using MicroTaskTracker.Models.DBModels;
-using MicroTaskTracker.Models.ViewModels;
+using MicroTaskTracker.Models.ViewModels.TasksViewModels;
 
 namespace MicroTaskTracker.Services.Interfaces
 {

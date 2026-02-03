@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MicroTaskTracker.Data;
 using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels;
+using MicroTaskTracker.Models.ViewModels.TasksViewModels;
 using MicroTaskTracker.Services.Interfaces;
 using System.Threading.Tasks;
 

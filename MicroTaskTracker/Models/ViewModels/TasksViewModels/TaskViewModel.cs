@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MicroTaskTracker.Models.DBModels;
+using System.ComponentModel.DataAnnotations;
 
-namespace MicroTaskTracker.Models.ViewModels
+namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
 {
-    public class TaskEditViewModel
+    public class TaskViewModel
     {
         public int Id { get; set; }
 
@@ -13,5 +14,8 @@ namespace MicroTaskTracker.Models.ViewModels
         [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
         public string? Description { get; set; }
         public DateTime? DueDate { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public TaskPriority Priority { get; set; } = TaskPriority.Low;
+        public bool IsCompleted { get; set; }
     }
 }
