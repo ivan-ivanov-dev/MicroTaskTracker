@@ -35,7 +35,7 @@ namespace MicroTaskTracker.Controllers
             }
             var user = new ApplicationUser
             {
-                UserName = signInViewModel.Email,
+                UserName = signInViewModel.UserName,
                 Email = signInViewModel.Email
             };
             var result = await _userManager.CreateAsync(user, signInViewModel.Password);

@@ -19,9 +19,9 @@ namespace MicroTaskTracker.Models.ViewModels.Authentication
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; } = null!;
 
-        //[Required]
-        //[MinLength(3, ErrorMessage = "Usrename must be at least 3 characters long.")]
-        //[MaxLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
-        //public string UserName { get; set; } = null!;
+        [Required]
+        [MinLength(3, ErrorMessage = "Usrename must be at least 3 characters long.")]
+        [MaxLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
+        public string UserName { get; set; } = null!;
     }
 }
