@@ -6,7 +6,10 @@
     ViewData["Title"] = "Task List";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="tasks-header">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-success">Create Task</a>
+</div>
 
 <div class="mb-3">
     <a asp-action="Create" class="btn btn-success">Create Task</a>
@@ -65,7 +68,7 @@
     </div>
 </form>
 
-<table class="table table-striped table-bordered">
+<table class="table table-striped table-bordered tasks-table">
     <thead>
         <tr>
             <th>Title</th>
@@ -80,6 +83,7 @@
         @foreach (var task in Model.Tasks)
         {
             <tr>
+                class="@(task.IsCompleted ? "task-completed" : "")">
                 <td>@task.Title</td>
                 <td>
                     <form asp-action="UpdatePriority" method="post" class="d-inline">
@@ -87,11 +91,12 @@
                         <input type="hidden" name="id" value="@task.Id" />
 
                         <select name="priority"
-                                class="form-select form-select-sm"
+                                class="form-select form-select-sm priority-select"
                                 asp-for="@task.Priority"
                                 asp-items="Html.GetEnumSelectList<TaskPriority>()"
-                                onchange="this.form.submit()">
+                                data-auto-submit="true">
                         </select>
+
                     </form>
                 </td>
                 <td>@(task.DueDate?.ToString("yyyy-MM-dd") ?? "-")</td>
@@ -107,10 +112,24 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-primary me-1">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-danger me-1">Delete</a>
+                    <a asp-action="Delete"
+                       asp-route-id="@task.Id"
+                       class="btn btn-sm btn-danger me-1"
+                       data-confirm-delete="true">
+                        Delete
+                    </a>
+
                     <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-sm btn-info">Details</a>
                 </td>
             </tr>
+
         }
     </tbody>
 </table>
+@section Styles {
+    <link rel="stylesheet" href="~/css/tasks.css" />
+}
+
+@section Scripts {
+    <script src="~/js/tasks.js"></script>
+}

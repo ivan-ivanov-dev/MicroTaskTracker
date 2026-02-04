@@ -5,41 +5,50 @@
     ViewData["Title"] = "Register";
 }
 
+<link rel="stylesheet" href="~/css/account.auth.css" asp-append-version="true" />
+
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Register" method="post" novalidate>
+<form id="registerForm" asp-action="Register" method="post" novalidate class="auth-form">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <div class="mb-3">
         <label asp-for="UserName" class="form-label">Username</label>
-        <input asp-for="UserName" class="form-control" />
-        <span asp-validation-for="UserName" class="text-danger"></span>
+        <input asp-for="UserName" class="form-control" id="UserName" />
+        <span asp-validation-for="UserName" class="error-text"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" type="email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" type="email" class="form-control" id="Email" />
+        <span asp-validation-for="Email" class="error-text"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
+        <label asp-for="Password" class="form-label">Password</label>
+        <input asp-for="Password" type="password" class="form-control" id="Password" />
+        <span asp-validation-for="Password" class="error-text"></span>
+
+        <div id="passwordStrength" class="password-strength weak" aria-hidden="true">
+            <div class="bar"></div>
+        </div>
     </div>
 
     <div class="mb-3">
-        <label asp-for="ConfirmPassword" class="form-label"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" id="ConfirmPassword" />
+        <span asp-validation-for="ConfirmPassword" class="error-text"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Register</button>
-    <a asp-action="Login" class="btn btn-link ms-2">Already have an account?</a>
+    <div class="auth-actions">
+        <button type="submit" class="btn btn-primary">Register</button>
+        <a asp-action="Login" class="btn btn-link ms-2">Already have an account?</a>
+    </div>
 </form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/auth.js" asp-append-version="true"></script>
 }
 

@@ -5,33 +5,38 @@
     ViewData["Title"] = "Login";
 }
 
+<link rel="stylesheet" href="~/css/account.auth.css" asp-append-version="true" />
+
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Login" method="post" novalidate>
+<form id="loginForm" asp-action="Login" method="post" novalidate class="auth-form">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" type="email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <label asp-for="Email" class="form-label">Username or Email</label>
+        <input asp-for="Email" type="text" class="form-control" id="LoginIdentifier" placeholder="Username or email" />
+        <span asp-validation-for="Email" class="error-text"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
+        <input asp-for="Password" type="password" class="form-control" id="Password" />
+        <span asp-validation-for="Password" class="error-text"></span>
     </div>
 
     <div class="form-check mb-3">
-        <input asp-for="RememberMe" class="form-check-input" />
+        <input asp-for="RememberMe" class="form-check-input" id="RememberMe" />
         <label asp-for="RememberMe" class="form-check-label"></label>
     </div>
 
-    <button type="submit" class="btn btn-primary">Login</button>
-    <a asp-action="Register" class="btn btn-link ms-2">Register</a>
+    <div class="auth-actions">
+        <button type="submit" class="btn btn-primary">Login</button>
+        <a asp-action="Register" class="btn btn-link ms-2">Register</a>
+    </div>
 </form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/auth.js" asp-append-version="true"></script>
 }

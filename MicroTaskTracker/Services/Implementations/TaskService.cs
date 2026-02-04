@@ -16,7 +16,7 @@ namespace MicroTaskTracker.Services.Implementations
         {
             _context = context;
         }
-        public async Task CreateAsync(TaskCreateViewModel model)
+        public async Task CreateAsync(TaskCreateViewModel model, string userId)
         {
             
             var task = new TaskItem
@@ -27,13 +27,14 @@ namespace MicroTaskTracker.Services.Implementations
                 CreatedOn = DateTime.UtcNow,
                 IsCompleted = false,
                 Priority = TaskPriority.Low,
+                UserId = userId
             };
 
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id, string userId)
         {
             var task = await _context.Tasks.FindAsync(id);
             if (task == null)
@@ -41,14 +42,20 @@ namespace MicroTaskTracker.Services.Implementations
                 return false;
             }
 
+            if(task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
             _context.Tasks.Remove(task);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<TaskListViewModel> GetAllTasksAsync(TaskQueryModel queryModel)
+        public async Task<TaskListViewModel> GetAllTasksAsync(TaskQueryModel queryModel, string userId)
         {
-            var tasksQuery = _context.Tasks.AsQueryable();
+            var tasksQuery = _context.Tasks
+                .Where(u => u.UserId == userId)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(queryModel.SearchByTitle))
             {
@@ -99,10 +106,10 @@ namespace MicroTaskTracker.Services.Implementations
             return result;
         }
 
-        public Task<TaskDetailsViewModel?> GetDetailsAsync(int id)
+        public Task<TaskDetailsViewModel?> GetDetailsAsync(int id, string userId)
         {
-            return _context.Tasks
-                .Where(t => t.Id == id)
+            var task = _context.Tasks
+                .Where(t => t.Id == id && t.UserId == userId)
                 .Select(t => new TaskDetailsViewModel
                 {
                     Id = t.Id,
@@ -114,9 +121,16 @@ namespace MicroTaskTracker.Services.Implementations
                     Priority = t.Priority
                 })
                 .FirstOrDefaultAsync();
+
+            if (task == null)
+            {
+                return null;
+            }
+
+            return task;
         }
 
-        public async Task MarkTaskStatusAsync(int id)
+        public async Task MarkTaskStatusAsync(int id, string userId)
         {
             var task = await _context.Tasks.FindAsync(id);
 
@@ -124,18 +138,27 @@ namespace MicroTaskTracker.Services.Implementations
             {
                 throw new InvalidOperationException("Task not found");
             }
+            if (task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
 
             task.IsCompleted = !task.IsCompleted;
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateAsync(int id, TaskEditViewModel model)
+        public async Task<bool> UpdateAsync(int id, TaskEditViewModel model,string userId)
         {
             var task = await _context.Tasks.FindAsync(id);
             if (task == null)
             {
                 return false;
+            }
+
+            if(task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
             }
 
             task.Title = model.Title;
@@ -146,13 +169,17 @@ namespace MicroTaskTracker.Services.Implementations
             return true;
         }
 
-        public async Task UpdatePriorityAsync(int id, TaskPriority priority)
+        public async Task UpdatePriorityAsync(int id, TaskPriority priority, string userId)
         {
             var task = await _context.Tasks.FindAsync(id);
 
             if (task == null)
             {
                 throw new InvalidOperationException("Task not found");
+            }
+            if (task.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
             }
 
             task.Priority =priority;

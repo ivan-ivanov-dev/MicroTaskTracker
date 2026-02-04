@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MicroTaskTracker.Data;
@@ -9,16 +10,24 @@ using System.Threading.Tasks;
 
 namespace MicroTaskTracker.Controllers
 {
+    [Authorize]
     public class TasksController : Controller
     {
         private readonly ITaskService _taskService;
-        public TasksController(ITaskService taskService)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public TasksController(ITaskService taskService, UserManager<ApplicationUser> userManager)
         {
             _taskService = taskService;
+            _userManager = userManager;
         }
+
+        /*List Tasks*/
+
         public async Task<IActionResult> Index(TaskQueryModel queryModel)
         {
-            var model = await _taskService.GetAllTasksAsync(queryModel);
+            var userId = _userManager.GetUserId(User);
+
+            var model = await _taskService.GetAllTasksAsync(queryModel, userId);
             return View(model);
         }
 
@@ -48,10 +57,10 @@ namespace MicroTaskTracker.Controllers
                 return View(model);
             }
 
-            /*Implement authentication*/
+            var userId = _userManager.GetUserId(User);
             try
             {
-                await _taskService.CreateAsync(model);
+                await _taskService.CreateAsync(model,userId);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -67,7 +76,9 @@ namespace MicroTaskTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> EditAsync(int id)
         {
-            var model = await _taskService.GetDetailsAsync(id);
+            var userId = _userManager.GetUserId(User);
+
+            var model = await _taskService.GetDetailsAsync(id,userId);
             if (model == null)
             {
                 return NotFound();
@@ -87,6 +98,8 @@ namespace MicroTaskTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> EditAsync(int id, TaskEditViewModel model)
         {
+            var userId = _userManager.GetUserId(User);
+
             if (String.IsNullOrWhiteSpace(model.Title))
             {
                 ModelState.AddModelError("Title", "The Title field is required.");
@@ -102,11 +115,9 @@ namespace MicroTaskTracker.Controllers
                 return View(model);
             }
 
-            /*Implement authentication*/
-
             try
             {
-                await _taskService.UpdateAsync(id, model);
+                await _taskService.UpdateAsync(id, model, userId);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -121,13 +132,14 @@ namespace MicroTaskTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var task = await _taskService.GetDetailsAsync(id);
+            var userId = _userManager.GetUserId(User);
+
+            var task = await _taskService.GetDetailsAsync(id, userId);
+
             if (task == null)
             {
                 return NotFound();
             }
-
-            /*Implement authentication*/
 
             var model = new TaskDeleteViewModel
             {
@@ -140,9 +152,9 @@ namespace MicroTaskTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAsync(TaskDeleteViewModel model)
         {
-            /*Implement authentication*/
+            var userId = _userManager.GetUserId(User);
 
-            await _taskService.DeleteAsync(model.Id);
+            await _taskService.DeleteAsync(model.Id, userId);
             return RedirectToAction(nameof(Index));
         }
 
@@ -151,23 +163,32 @@ namespace MicroTaskTracker.Controllers
         [HttpGet]
         public async Task<IActionResult> DetailsAsync(int id)
         {
-            /*Implement authentication*/
+            var userId = _userManager.GetUserId(User);
 
-            var model = await _taskService.GetDetailsAsync(id);
+            var model = await _taskService.GetDetailsAsync(id, userId);
+
+            if(model == null)
+            {
+                return NotFound();
+            }
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> MarkTaskStatus(int id)
         {
-            await _taskService.MarkTaskStatusAsync(id);
+            var userId = _userManager.GetUserId(User);
+
+            await _taskService.MarkTaskStatusAsync(id, userId);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdatePriority(int id, TaskPriority priority)
         {
-            await _taskService.UpdatePriorityAsync(id,priority);
+            var userId = _userManager.GetUserId(User);
+
+            await _taskService.UpdatePriorityAsync(id,priority, userId);
             return RedirectToAction(nameof(Index));
         }
     }

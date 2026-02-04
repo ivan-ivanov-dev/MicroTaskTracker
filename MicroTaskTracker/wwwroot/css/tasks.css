@@ -1,0 +1,61 @@
+﻿/* Tasks page layout */
+
+.tasks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+    .tasks-header h1 {
+        margin: 0;
+    }
+
+/* Table improvements */
+.tasks-table th {
+    white-space: nowrap;
+}
+
+.tasks-table td {
+    vertical-align: middle;
+}
+
+.tasks-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Priority select */
+.priority-select {
+    max-width: 140px;
+}
+
+/* Status badge spacing */
+.status-badge {
+    min-width: 90px;
+    text-align: center;
+}
+
+/* Action buttons */
+.task-actions .btn {
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+/* Completed task styling */
+.task-completed {
+    opacity: 0.7;
+    text-decoration: line-through;
+}
+
+/* Small screen tweaks */
+@media (max-width: 768px) {
+    .task-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .priority-select {
+        max-width: 100%;
+    }
+}

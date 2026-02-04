@@ -5,9 +5,11 @@
     ViewData["Title"] = "Edit Task";
 }
 
+<link rel="stylesheet" href="~/css/tasks.css" asp-append-version="true" />
+
 <h1>@ViewData["Title"]</h1>
 
-<form asp-action="Edit" method="post" novalidate>
+<form asp-action="Edit" method="post" novalidate class="task-form">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
 
