@@ -17,32 +17,57 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    @* Main navigation — varies by authentication state *@
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Tasks" asp-action="Index">Tasks</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
+                        @if (!(User?.Identity?.IsAuthenticated ?? false))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                        }
+
                         @if (User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <span class="nav-link">Hello @User.Identity.Name</span>
+                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                             </li>
                             <li class="nav-item">
-                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-link nav-link">Logout</button>
-                                </form>
+                                <a class="nav-link text-dark" asp-controller="Tasks" asp-action="Index">Tasks</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        }
+                    </ul>
+
+                    @* Right side: auth links / username + logout *@
+                    <ul class="navbar-nav">
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Manage">Account</a>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="px-3 py-1">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-link p-0 text-danger">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         }
                         else
@@ -59,7 +84,7 @@
             </div>
         </nav>
     </header>
-    <div class="container"
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -67,7 +92,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - MicroTaskTracker - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.UtcNow.Year - MicroTaskTracker - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
