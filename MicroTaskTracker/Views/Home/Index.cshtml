@@ -1,8 +1,65 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to MicroTaskTracker";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    <header class="row align-items-center mb-5">
+        <div class="col-lg-7">
+            <h1 class="display-4 fw-bold">MicroTaskTracker</h1>
+            <p class="lead text-muted">
+                Small, fast task management for individuals and teams — keep focus, set priorities, and move faster.
+            </p>
+
+            <p class="mt-4">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Get Started</a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">Login</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-link ms-2">Register</a>
+            </p>
+        </div>
+
+        <div class="col-lg-5 text-center d-none d-lg-block">
+            <div class="bg-light border rounded p-4">
+                <h5 class="mb-3">Quick snapshot</h5>
+                <p class="mb-0 text-muted">Track tasks, prioritize work, and see what matters today — all in one place.</p>
+            </div>
+        </div>
+    </header>
+
+    <section class="mb-5">
+        <h2 class="h4 mb-3">Features</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Task tracking</h5>
+                        <p class="card-text text-muted">Create, edit and manage tasks with due dates so nothing slips through the cracks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Priorities</h5>
+                        <p class="card-text text-muted">Assign Low, Medium, High or Critical priority to focus on what matters most.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Dashboard</h5>
+                        <p class="card-text text-muted">At-a-glance stats and focused lists — due today, overdue and high-priority items.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="text-center py-4">
+        <p class="mb-2 text-muted">Ready to organize your work?</p>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-lg btn-primary">Get Started — it's free</a>
+    </section>
 </div>
