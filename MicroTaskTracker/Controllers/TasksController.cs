@@ -84,7 +84,6 @@ namespace MicroTaskTracker.Controllers
                 return NotFound();
             }
 
-            /*Implement authentication*/
             var editModel = new TaskEditViewModel
             {
                 Title = model.Title,
