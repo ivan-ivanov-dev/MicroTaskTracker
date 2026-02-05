@@ -1,31 +1,37 @@
-using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MicroTaskTracker.Models.ViewModels;
+using MicroTaskTracker.Models.ViewModels.Dashboard;
+using MicroTaskTracker.Services.Interfaces;
+using System.Security.Claims;
+
 namespace MicroTaskTracker.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
-        private readonly ILogger<DashboardController> _logger;
-
-        public DashboardController(ILogger<DashboardController> logger)
+        private readonly IDashboardService _dashboardService;
+        public DashboardController(IDashboardService dashboardService)
         {
-            _logger = logger;
+            _dashboardService = dashboardService;
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            if(string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var stats = await _dashboardService.GetDashboardStatsAsync(userId);
+            var focusLists = await _dashboardService.GetDashboardFocusListsAsync(userId);
+
+            var model = new DashboardViewModel
+            {
+                Stats = stats,
+                FocusLists = focusLists
+            };
+            return View(model);
         }
     }
 }

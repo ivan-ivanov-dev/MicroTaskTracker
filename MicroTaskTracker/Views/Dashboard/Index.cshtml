@@ -1,0 +1,140 @@
+﻿@model MicroTaskTracker.Models.ViewModels.Dashboard.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">@ViewData["Title"]</h1>
+    <a asp-controller="Tasks" asp-action="Index" class="btn btn-outline-primary">View Tasks</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Total tasks</h6>
+                <p class="display-6 mb-0">@Model.Stats.TotalTasks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Completed</h6>
+                <p class="display-6 mb-0">@Model.Stats.CompletedTasks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Due today</h6>
+                <p class="display-6 mb-0">@Model.Stats.TotalTasksDueToday</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Completed today</h6>
+                <p class="display-6 mb-0">@Model.Stats.CompletedTasksDueToday</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                Due Today
+            </div>
+            <div class="card-body">
+                @if (!Model.FocusLists.DueTodayTasks.Any())
+                {
+                    <div class="text-muted">No tasks due today.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var t in Model.FocusLists.DueTodayTasks)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold">@t.Title</a>
+                                    <div class="small text-muted">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("yyyy-MM-dd") : "No due date")</div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-@(t.IsCompleted ? "secondary" : "primary")">@t.Priority</span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                Future — High Priority
+            </div>
+            <div class="card-body">
+                @if (!Model.FocusLists.FutureHighPriorityTasks.Any())
+                {
+                    <div class="text-muted">No future high priority tasks.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var t in Model.FocusLists.FutureHighPriorityTasks)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold">@t.Title</a>
+                                    <div class="small text-muted">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("yyyy-MM-dd") : "No due date")</div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-@(t.IsCompleted ? "secondary" : "danger")">@t.Priority</span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-header">
+                Overdue
+            </div>
+            <div class="card-body">
+                @if (!Model.FocusLists.OverdueTasks.Any())
+                {
+                    <div class="text-muted">No overdue tasks.</div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var t in Model.FocusLists.OverdueTasks)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-danger">@t.Title</a>
+                                    <div class="small text-muted">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("yyyy-MM-dd") : "No due date")</div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-@(t.IsCompleted ? "secondary" : "danger")">@t.Priority</span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,7 +8,6 @@
 
 <div class="tasks-header">
     <h1>@ViewData["Title"]</h1>
-    <a asp-action="Create" class="btn btn-success">Create Task</a>
 </div>
 
 <div class="mb-3">
@@ -83,7 +82,6 @@
         @foreach (var task in Model.Tasks)
         {
             <tr>
-                class="@(task.IsCompleted ? "task-completed" : "")">
                 <td>@task.Title</td>
                 <td>
                     <form asp-action="UpdatePriority" method="post" class="d-inline">

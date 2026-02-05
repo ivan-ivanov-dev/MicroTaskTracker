@@ -47,7 +47,7 @@ namespace MicroTaskTracker.Controllers
                 ModelState.AddModelError("Title", "The Title field is required.");
             }
             
-            if (model.DueDate.HasValue && model.DueDate.Value < DateTime.Now)
+            if (model.DueDate.HasValue && model.DueDate.Value < DateTime.Now.Date)
             {
                 ModelState.AddModelError("DueDate", "Due date cannot be in the past.");
             }
@@ -84,7 +84,6 @@ namespace MicroTaskTracker.Controllers
                 return NotFound();
             }
 
-            /*Implement authentication*/
             var editModel = new TaskEditViewModel
             {
                 Title = model.Title,
