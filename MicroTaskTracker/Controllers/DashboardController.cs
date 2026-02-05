@@ -6,7 +6,7 @@ namespace MicroTaskTracker.Controllers
     [Authorize]
     public class DashboardController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string id)
         {
             return View();
         }
