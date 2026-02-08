@@ -5,73 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MicroTaskTracker</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <!-- CHANGED: Added site.css for global styling enhancements -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MicroTaskTracker.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
 </head>
+
 <body>
+    @* Header shown only for anonymous users *@
+    @if (!(User?.Identity?.IsAuthenticated ?? false))
+    {
     <header>
-        <!-- CHANGED: Removed mb-3 class for cleaner spacing -->
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MicroTaskTracker</a>
-                <button class="navbar-toggler navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    @* Main navigation — varies by authentication state *@
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User?.Identity?.IsAuthenticated ?? false)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Tasks" asp-action="Index">Tasks</a>
-                            </li>
-                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
                     </ul>
 
-                    @* Right side: auth links / username + logout *@
                     <ul class="navbar-nav">
-                        @if (User?.Identity?.IsAuthenticated ?? false)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @User.Identity.Name
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Account" asp-action="Manage">Account</a>
-                                    </li>
-                                    <li><hr class="dropdown-divider" /></li>
-                                    <li>
-                                        <form asp-controller="Account" asp-action="Logout" method="post" class="px-3 py-1">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-link p-0 text-danger">Logout</button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
-                            </li>
-                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <!-- CHANGED: Added mt-4 class for spacing after navbar -->
-    <div class="container mt-4">
+    }
+    else
+    {
+    @* Mobile-only fixed button to open offcanvas (keeps header removed on auth) *@
+    <button type="button" class="btn btn-outline-secondary sidebar-toggle-fixed d-lg-none" data-bs-toggle="offcanvas"
+        data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas" aria-label="Open navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    }
+
+    @* Offcanvas sidebar (mobile) and persistent desktop sidebar rendered only for authenticated users *@
+    @if (User?.Identity?.IsAuthenticated ?? false)
+    {
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">MicroTaskTracker</h5>
+            @* Remove default "x" close button. Use our styled close button so it visually matches desktop toggle and moves with sidebar. *@
+            <button type="button" class="btn btn-sm btn-outline-secondary sidebar-close-btn d-lg-none" data-bs-dismiss="offcanvas"
+                aria-label="Close sidebar">
+                <span class="visually-hidden">Close</span>
+                <!-- Simple icon matching the collapse control -->
+                <span aria-hidden="true">⮜</span>
+            </button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <nav class="nav sidebar-nav">
+                <a class="sidebar-link" asp-controller="Dashboard" asp-action="Index"><span class="sidebar-link-text">Dashboard</span></a>
+                <a class="sidebar-link" asp-controller="Tasks" asp-action="Index"><span class="sidebar-link-text">Tasks</span></a>
+            </nav>
+
+            <div class="sidebar-footer mt-auto">
+                <div class="small text-muted mb-2">@User.Identity?.Name</div>
+                <a class="sidebar-link" asp-controller="Account" asp-action="Manage"><span class="sidebar-link-text">Account</span></a>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar-desktop d-none d-lg-flex" role="navigation" aria-label="Main navigation" id="sidebarDesktop">
+        <div class="sidebar-brand">
+            <span class="navbar-logo">MT</span>
+            <span class="sidebar-brand-text">MicroTaskTracker</span>
+
+            @* Collapse button inside sidebar so it moves with the sidebar and doesn't overlap content.
+               Placed at the top-right of the sidebar area. *@
+            <button id="sidebarCollapseBtn" class="btn btn-sm btn-outline-secondary sidebar-collapse-btn" aria-label="Toggle sidebar">
+                <span aria-hidden="true">⮜</span>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a class="sidebar-link" asp-controller="Dashboard" asp-action="Index"><span class="sidebar-link-text">Dashboard</span></a>
+            <a class="sidebar-link" asp-controller="Tasks" asp-action="Index"><span class="sidebar-link-text">Tasks</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="small text-muted mb-2">@User.Identity?.Name</div>
+            <a class="sidebar-link" asp-controller="Account" asp-action="Manage"><span class="sidebar-link-text">Account</span></a>
+            <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+            </form>
+        </div>
+    </aside>
+    }
+
+    <div class="container">
         <main role="main" class="main-content pb-3">
             @RenderBody()
         </main>
@@ -82,11 +124,57 @@
             &copy; @DateTime.UtcNow.Year - MicroTaskTracker - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- CHANGED: Added site.js for global JavaScript enhancements -->
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* Small inline script to wire collapse behavior (keeps site.js unchanged) *@
+    <script>
+        (function () {
+            const collapseBtn = document.getElementById('sidebarCollapseBtn');
+            const bodyEl = document.body;
+            const COLLAPSED_CLASS = 'sidebar-collapsed';
+
+            function updateCollapseIcon(btn) {
+                if (!btn) return;
+                const icon = btn.querySelector('span[aria-hidden="true"]');
+                if (!icon) return;
+                const collapsed = bodyEl.classList.contains(COLLAPSED_CLASS);
+                // arrow points right when collapsed (to open), left when expanded (to close)
+                icon.textContent = collapsed ? '⮞' : '⮜';
+                btn.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+                btn.setAttribute('title', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+            }
+
+            if (collapseBtn) {
+                // set initial state on load
+                updateCollapseIcon(collapseBtn);
+
+                collapseBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    bodyEl.classList.toggle(COLLAPSED_CLASS);
+                    updateCollapseIcon(this);
+                });
+            }
+
+            // When offcanvas is shown, hide the fixed open button to avoid duplicate controls on mobile.
+            const offcanvasEl = document.getElementById('sidebarOffcanvas');
+            const openFixedBtn = document.querySelector('.sidebar-toggle-fixed');
+
+            if (offcanvasEl && openFixedBtn) {
+                offcanvasEl.addEventListener('show.bs.offcanvas', function () {
+                    openFixedBtn.style.display = 'none';
+                });
+                offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
+                    openFixedBtn.style.display = '';
+                });
+            }
+        })();
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Styles", required: false)
 </body>
+
 </html>

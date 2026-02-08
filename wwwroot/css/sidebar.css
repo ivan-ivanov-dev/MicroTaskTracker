@@ -1,0 +1,156 @@
+/* Sidebar styles moved out of layout to keep layout clean.
+   This file now contains sidebar visuals including a clear black outline
+   and collapsed-state behavior. */
+
+/* ...existing content kept above unchanged... */
+
+.sidebar-brand {
+    font-weight: var(--font-weight-bold);
+    font-size: 1.125rem;
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    position: relative;
+    /* reserve space for the collapse button so it doesn't overlap the brand text */
+    padding-right: 2.5rem;
+}
+
+/* collapse button that sits inside the sidebar (top-right)
+   so it moves with the sidebar and doesn't overlap main content */
+.sidebar-collapse-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    line-height: 1;
+    padding: .25rem .4rem;
+    z-index: 1100; /* keep on top of brand text */
+    transition: right 180ms ease, transform 180ms ease;
+}
+
+/* Collapsed state: move collapse button outside the sidebar edge so it doesn't overlap brand */
+body.sidebar-collapsed .sidebar-collapse-btn {
+    right: -18px;
+    transform: translateX(0);
+}
+
+/* Make the collapsed sidebar narrower and fully hide text labels */
+@media (min-width: 992px) {
+    .sidebar-desktop {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 220px;
+        padding: 1.25rem 1rem;
+        gap: 1rem;
+        z-index: 1030;
+        transition: width 180ms ease;
+        overflow: hidden;
+    }
+
+    /* shift main content when sidebar is visible on desktop */
+    .main-content {
+        margin-left: 220px;
+        transition: margin-left 180ms ease;
+    }
+
+    /* small adjustment: move the brand and navigation a bit lower on desktop */
+    .sidebar-desktop .sidebar-brand {
+        margin-top: 1.25rem; /* moved down slightly */
+    }
+
+    .sidebar-desktop .sidebar-nav {
+        margin-top: .75rem; /* keep pages grouped under brand */
+    }
+
+    /* collapsed state (narrow sidebar) */
+    body.sidebar-collapsed .sidebar-desktop {
+        width: 72px;
+    }
+
+    body.sidebar-collapsed .main-content {
+        margin-left: 72px;
+    }
+
+    /* hide textual labels when collapsed */
+    body.sidebar-collapsed .sidebar-link-text,
+    body.sidebar-collapsed .sidebar-brand-text {
+        display: none;
+    }
+
+    /* center icons/text when collapsed */
+    body.sidebar-collapsed .sidebar-link {
+        justify-content: center;
+    }
+
+    /* ensure collapse button stays vertically aligned when collapsed */
+    body.sidebar-collapsed .sidebar-collapse-btn {
+        top: 8px;
+    }
+}
+
+/* Offcanvas mobile close button - styled like collapse control but shown only on mobile */
+.sidebar-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    padding: .125rem .35rem;
+}
+
+/* Navigation */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    margin-top: .5rem;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: .5rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .75rem;
+    border-radius: .5rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.sidebar-link:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* Small fixed toggle (mobile) */
+.sidebar-toggle-fixed {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2000;
+    border-radius: .375rem;
+    padding: .35rem .5rem;
+}
+
+/* ensure offcanvas body uses full height so footer sits at bottom */
+.offcanvas-body.d-flex {
+    min-height: calc(100vh - 56px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* keep offcanvas visually outlined similar to desktop sidebar */
+.offcanvas.offcanvas-start {
+    border-right: 2px solid #000;
+}
+
+/* ...rest of file unchanged... */
