@@ -4,47 +4,51 @@
     ViewData["Title"] = "Dashboard";
 }
 
+<!-- CHANGED: Improved header spacing and button styling -->
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0">@ViewData["Title"]</h1>
-    <a asp-controller="Tasks" asp-action="Index" class="btn btn-outline-primary">View Tasks</a>
+    <h1 class="h2 mb-0">@ViewData["Title"]</h1>
+    <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary">View All Tasks</a>
 </div>
 
-<div class="row g-3 mb-4">
+<!-- CHANGED: Improved card spacing with g-4 (was g-3) -->
+<div class="row g-4 mb-5">
     <div class="col-sm-6 col-md-3">
-        <div class="card text-center">
+        <!-- CHANGED: Enhanced card styling with better hierarchy -->
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Total tasks</h6>
-                <p class="display-6 mb-0">@Model.Stats.TotalTasks</p>
+                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Tasks</h6>
+                <p class="display-6 mb-0 fw-bold">@Model.Stats.TotalTasks</p>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
-        <div class="card text-center">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Completed</h6>
-                <p class="display-6 mb-0">@Model.Stats.CompletedTasks</p>
+                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Completed</h6>
+                <p class="display-6 mb-0 fw-bold text-success">@Model.Stats.CompletedTasks</p>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
-        <div class="card text-center">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Due today</h6>
-                <p class="display-6 mb-0">@Model.Stats.TotalTasksDueToday</p>
+                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Due Today</h6>
+                <p class="display-6 mb-0 fw-bold text-primary">@Model.Stats.TotalTasksDueToday</p>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
-        <div class="card text-center">
+        <div class="card text-center h-100">
             <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">Completed today</h6>
-                <p class="display-6 mb-0">@Model.Stats.CompletedTasksDueToday</p>
+                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Completed Today</h6>
+                <p class="display-6 mb-0 fw-bold">@Model.Stats.CompletedTasksDueToday</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
+<!-- CHANGED: Updated row gap from default to g-4 for consistent spacing -->
+<div class="row g-4">
     <div class="col-lg-4 mb-3">
         <div class="card h-100">
             <div class="card-header">
@@ -53,19 +57,21 @@
             <div class="card-body">
                 @if (!Model.FocusLists.DueTodayTasks.Any())
                 {
-                    <div class="text-muted">No tasks due today.</div>
+                    <!-- CHANGED: Better empty state styling -->
+                    <div class="text-muted text-center py-3">No tasks due today.</div>
                 }
                 else
                 {
                     <ul class="list-group list-group-flush">
                         @foreach (var t in Model.FocusLists.DueTodayTasks)
                         {
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div>
-                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold">@t.Title</a>
-                                    <div class="small text-muted">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("yyyy-MM-dd") : "No due date")</div>
+                            <!-- CHANGED: Improved list item layout and spacing -->
+                            <li class="list-group-item d-flex justify-content-between align-items-start px-0">
+                                <div class="flex-grow-1">
+                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-decoration-none">@t.Title</a>
+                                    <div class="small text-muted mt-1">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy") : "No due date")</div>
                                 </div>
-                                <div class="text-end">
+                                <div class="ms-2">
                                     <span class="badge bg-@(t.IsCompleted ? "secondary" : "primary")">@t.Priority</span>
                                 </div>
                             </li>
@@ -84,19 +90,19 @@
             <div class="card-body">
                 @if (!Model.FocusLists.FutureHighPriorityTasks.Any())
                 {
-                    <div class="text-muted">No future high priority tasks.</div>
+                    <div class="text-muted text-center py-3">No future high priority tasks.</div>
                 }
                 else
                 {
                     <ul class="list-group list-group-flush">
                         @foreach (var t in Model.FocusLists.FutureHighPriorityTasks)
                         {
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div>
-                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold">@t.Title</a>
-                                    <div class="small text-muted">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("yyyy-MM-dd") : "No due date")</div>
+                            <li class="list-group-item d-flex justify-content-between align-items-start px-0">
+                                <div class="flex-grow-1">
+                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-decoration-none">@t.Title</a>
+                                    <div class="small text-muted mt-1">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy") : "No due date")</div>
                                 </div>
-                                <div class="text-end">
+                                <div class="ms-2">
                                     <span class="badge bg-@(t.IsCompleted ? "secondary" : "danger")">@t.Priority</span>
                                 </div>
                             </li>
@@ -115,19 +121,19 @@
             <div class="card-body">
                 @if (!Model.FocusLists.OverdueTasks.Any())
                 {
-                    <div class="text-muted">No overdue tasks.</div>
+                    <div class="text-muted text-center py-3">No overdue tasks.</div>
                 }
                 else
                 {
                     <ul class="list-group list-group-flush">
                         @foreach (var t in Model.FocusLists.OverdueTasks)
                         {
-                            <li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div>
-                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-danger">@t.Title</a>
-                                    <div class="small text-muted">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("yyyy-MM-dd") : "No due date")</div>
+                            <li class="list-group-item d-flex justify-content-between align-items-start px-0">
+                                <div class="flex-grow-1">
+                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-decoration-none text-danger">@t.Title</a>
+                                    <div class="small text-muted mt-1">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy") : "No due date")</div>
                                 </div>
-                                <div class="text-end">
+                                <div class="ms-2">
                                     <span class="badge bg-@(t.IsCompleted ? "secondary" : "danger")">@t.Priority</span>
                                 </div>
                             </li>

@@ -143,6 +143,7 @@ namespace MicroTaskTracker.Controllers
             var model = new TaskDeleteViewModel
             {
                 Id = task.Id,
+                Title = task.Title
             };
 
             return View(model);
