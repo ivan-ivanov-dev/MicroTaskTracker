@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ namespace MicroTaskTracker.Controllers
         public IActionResult Create()
         {
             var model = new TaskCreateViewModel();
-            return View(model);
+            return PartialView("CreatePartialView",model);
         }
         [HttpPost]
         public async Task<IActionResult> CreateAsync(TaskCreateViewModel model)
@@ -54,7 +55,7 @@ namespace MicroTaskTracker.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+            return PartialView("CreatePartialView",model);
             }
 
             var userId = _userManager.GetUserId(User);
@@ -66,7 +67,7 @@ namespace MicroTaskTracker.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "An error occurred while creating the task: " + ex.Message);
-                return View(model);
+                return PartialView("CreatePartialView", model);
             }
 
         }
@@ -92,7 +93,7 @@ namespace MicroTaskTracker.Controllers
             };
 
 
-            return View(editModel);
+            return PartialView("EditPartialView", editModel);
         }
         [HttpPost]
         public async Task<IActionResult> EditAsync(int id, TaskEditViewModel model)
@@ -111,7 +112,7 @@ namespace MicroTaskTracker.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return PartialView("EditPartialView", model);
             }
 
             try
@@ -122,7 +123,7 @@ namespace MicroTaskTracker.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "An error occurred while editing the task: " + ex.Message);
-                return View(model);
+                return PartialView("EditPartialView", model);
             }
         }
 
@@ -146,7 +147,7 @@ namespace MicroTaskTracker.Controllers
                 Title = task.Title
             };
 
-            return View(model);
+            return PartialView("DeletePartialView", model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -171,7 +172,7 @@ namespace MicroTaskTracker.Controllers
             {
                 return NotFound();
             }
-            return View(model);
+            return PartialView("DetailsPartialView", model);
         }
 
         [HttpPost]
