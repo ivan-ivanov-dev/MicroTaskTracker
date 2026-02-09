@@ -147,7 +147,7 @@ namespace MicroTaskTracker.Controllers
                 Title = task.Title
             };
 
-            return View(model);
+            return PartialView("DeletePartialView", model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -172,7 +172,7 @@ namespace MicroTaskTracker.Controllers
             {
                 return NotFound();
             }
-            return View(model);
+            return PartialView("DeletePartialView", model);
         }
 
         [HttpPost]
