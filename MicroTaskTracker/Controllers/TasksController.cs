@@ -93,7 +93,7 @@ namespace MicroTaskTracker.Controllers
             };
 
 
-            return View(editModel);
+            return PartialView("EditPartialView", editModel);
         }
         [HttpPost]
         public async Task<IActionResult> EditAsync(int id, TaskEditViewModel model)
@@ -112,7 +112,7 @@ namespace MicroTaskTracker.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return PartialView("EditPartialView", model);
             }
 
             try
@@ -123,7 +123,7 @@ namespace MicroTaskTracker.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "An error occurred while editing the task: " + ex.Message);
-                return View(model);
+                return PartialView("EditPartialView", model);
             }
         }
 
