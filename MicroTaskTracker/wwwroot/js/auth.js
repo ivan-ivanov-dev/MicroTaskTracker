@@ -1,4 +1,10 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
+    // Fade-in animation for auth card
+    const authForm = document.querySelector('.auth-form');
+    if (authForm) {
+        setTimeout(() => authForm.classList.add('fade-in-up'), 100);
+    }
+
     // Password strength for register form
     var pwdInput = document.querySelector('#Password');
     var pwdStrengthEl = document.querySelector('#passwordStrength');
@@ -10,7 +16,6 @@
             if (/[A-Z]/.test(val)) score++;
             if (/[0-9]/.test(val)) score++;
             if (/[^A-Za-z0-9]/.test(val)) score++;
-            // Map score to classes
             pwdStrengthEl.classList.remove('weak', 'fair', 'good', 'strong');
             if (score <= 1) pwdStrengthEl.classList.add('weak');
             else if (score === 2) pwdStrengthEl.classList.add('fair');
@@ -19,7 +24,7 @@
         });
     }
 
-    // Simple client-side disable submit if required fields empty
+    // Disable submit if required fields empty
     function attachDisableSubmit(formSelector, requiredSelectors) {
         var form = document.querySelector(formSelector);
         if (!form) return;
