@@ -1,65 +1,259 @@
 ﻿@{
-    ViewData["Title"] = "Welcome to MicroTaskTracker";
+    ViewData["Title"] = "Welcome to Pathly";
 }
 
-<div class="container py-5">
-    <header class="row align-items-center mb-5">
-        <div class="col-lg-7">
-            <h1 class="display-4 fw-bold">MicroTaskTracker</h1>
-            <p class="lead text-muted">
-                Small, fast task management for individuals and teams — keep focus, set priorities, and move faster.
-            </p>
+<!--Hero section -->
+<section class="py-5" style="background-color: var(--pathly-bg);">
+    <div class="container">
+        <div class="row align-items-center">
 
-            <p class="mt-4">
-                <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Get Started</a>
-                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary btn-lg">Login</a>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-link ms-2">Register</a>
-            </p>
-        </div>
-
-        <div class="col-lg-5 text-center d-none d-lg-block">
-            <div class="bg-light border rounded p-4">
-                <h5 class="mb-3">Quick snapshot</h5>
-                <p class="mb-0 text-muted">Track tasks, prioritize work, and see what matters today — all in one place.</p>
+            <!-- Left: Headline + Description + Buttons -->
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold" style="color: var(--pathly-primary);">
+                    Turn Goals Into Daily Progress
+                </h1>
+                <p class="lead mb-4" style="color: var(--pathly-text);">
+                    Pathly helps you plan your day, break goals into actions, and actually follow through.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-lg" style="background-color: var(--pathly-accent); color: #fff; border-radius: var(--btn-radius);">
+                        Get Started
+                    </a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-lg btn-outline-dark" style="border-radius: var(--btn-radius);">
+                        Log In
+                    </a>
+                </div>
             </div>
+
+            <!-- Right: Illustration / Mockup -->
+            <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                <img src="~/images/hero-section-workflow-image.jpg" alt="Pathly App Mockup" class="img-fluid" style="max-height: 500px; border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+            </div>
+
         </div>
-    </header>
+    </div>
+</section>
 
-    <section class="mb-5">
-        <h2 class="h4 mb-3">Features</h2>
+<!--Problem-Solution section -->
+<section class="py-5" style="background-color: var(--pathly-bg);">
+    <div class="container">
+        <div class="row align-items-center">
 
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Task tracking</h5>
-                        <p class="card-text text-muted">Create, edit and manage tasks with due dates so nothing slips through the cracks.</p>
+            <!-- Left: Problems -->
+            <div class="col-md-6 mb-4 mb-md-0">
+                <h2 class="fw-bold mb-4" style="color: var(--pathly-primary);">The Challenges You Face</h2>
+
+                <div class="d-flex mb-3">
+                    <i class="bi bi-list-task fs-2 text-warning me-3"></i>
+                    <div>
+                        <h5 class="mb-1">Too many tasks, no structure</h5>
+                        <p class="text-muted mb-0" style="color: var(--pathly-muted);">Everything feels scattered. You struggle to focus on what matters most.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-3">
+                    <i class="bi bi-bullseye fs-2 text-warning me-3"></i>
+                    <div>
+                        <h5 class="mb-1">Big goals, no clear plan</h5>
+                        <p class="text-muted mb-0" style="color: var(--pathly-muted);">You have ambitions, but breaking them into actionable steps is painful.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex">
+                    <i class="bi bi-clock-history fs-2 text-warning me-3"></i>
+                    <div>
+                        <h5 class="mb-1">You forget what actually matters</h5>
+                        <p class="text-muted mb-0" style="color: var(--pathly-muted);">Without clarity, tasks slip through the cracks and progress stalls.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Priorities</h5>
-                        <p class="card-text text-muted">Assign Low, Medium, High or Critical priority to focus on what matters most.</p>
+            <!-- Right: Pathly Solutions -->
+            <div class="col-md-6">
+                <h2 class="fw-bold mb-4" style="color: var(--pathly-primary);">How Pathly Helps</h2>
+
+                <div class="d-flex mb-3">
+                    <i class="bi bi-graph-up fs-2 text-success me-3"></i>
+                    <div>
+                        <h5 class="mb-1">Turn goals into roadmaps</h5>
+                        <p class="text-muted mb-0" style="color: var(--pathly-muted);">Break big ambitions into manageable steps and always know your next move.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex mb-3">
+                    <i class="bi bi-calendar-check fs-2 text-success me-3"></i>
+                    <div>
+                        <h5 class="mb-1">Plan your day with intention</h5>
+                        <p class="text-muted mb-0" style="color: var(--pathly-muted);">Organize tasks and schedule your day so progress is built into your routine.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex">
+                    <i class="bi bi-bar-chart-line fs-2 text-success me-3"></i>
+                    <div>
+                        <h5 class="mb-1">Track progress visually</h5>
+                        <p class="text-muted mb-0" style="color: var(--pathly-muted);">See what’s done, what’s next, and stay motivated as you move forward.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Dashboard</h5>
-                        <p class="card-text text-muted">At-a-glance stats and focused lists — due today, overdue and high-priority items.</p>
-                    </div>
-                </div>
-            </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="text-center py-4">
-        <p class="mb-2 text-muted">Ready to organize your work?</p>
-        <a asp-controller="Account" asp-action="Register" class="btn btn-lg btn-primary">Get Started — it's free</a>
-    </section>
-</div>
+<!--Features section -->
+<section class="py-5" style="background-color: var(--pathly-bg);">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-5" style="color: var(--pathly-primary);">Features You’ll Love</h2>
+
+        <div class="row g-4 justify-content-center">
+
+            <!-- Daily Planner -->
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm rounded-3" style="border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+                    <div class="card-body">
+                        <i class="bi bi-calendar3 fs-1 text-warning mb-3"></i>
+                        <h5 class="card-title fw-bold">Daily Planner</h5>
+                        <p class="card-text text-muted" style="color: var(--pathly-muted);">Plan and prioritize your tasks to make every day productive.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals -->
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm rounded-3" style="border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+                    <div class="card-body">
+                        <i class="bi bi-bullseye fs-1 text-warning mb-3"></i>
+                        <h5 class="card-title fw-bold">Goals</h5>
+                        <p class="card-text text-muted" style="color: var(--pathly-muted);">Define your ambitions and track progress to stay motivated.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roadmaps -->
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm rounded-3" style="border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+                    <div class="card-body">
+                        <i class="bi bi-geo-alt fs-1 text-warning mb-3"></i>
+                        <h5 class="card-title fw-bold">Roadmaps</h5>
+                        <p class="card-text text-muted" style="color: var(--pathly-muted);">Break goals into clear actions and follow a step-by-step path.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tracking -->
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm rounded-3" style="border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+                    <div class="card-body">
+                        <i class="bi bi-bar-chart-line fs-1 text-warning mb-3"></i>
+                        <h5 class="card-title fw-bold">Progress Tracking</h5>
+                        <p class="card-text text-muted" style="color: var(--pathly-muted);">See what’s done, what’s next, and stay on top of your progress.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!--How it works section -->
+<section class="py-5" style="background-color: var(--pathly-bg);">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-5" style="color: var(--pathly-primary);">How It Works</h2>
+
+        <div class="row g-4 justify-content-center">
+
+            <!-- Step 1 -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm rounded-3 p-4" style="border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+                    <div class="mb-3">
+                        <span class="badge rounded-circle fs-5 text-white" style="background-color: var(--pathly-accent); width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
+                            1
+                        </span>
+                    </div>
+                    <i class="bi bi-lightbulb fs-2 text-warning mb-3"></i>
+                    <h5 class="fw-bold mb-2">Set a Goal</h5>
+                    <p class="text-muted mb-0" style="color: var(--pathly-muted);">Define what you want to achieve clearly and confidently.</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm rounded-3 p-4" style="border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+                    <div class="mb-3">
+                        <span class="badge rounded-circle fs-5 text-white" style="background-color: var(--pathly-accent); width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
+                            2
+                        </span>
+                    </div>
+                    <i class="bi bi-list-check fs-2 text-warning mb-3"></i>
+                    <h5 class="fw-bold mb-2">Break it into Actions</h5>
+                    <p class="text-muted mb-0" style="color: var(--pathly-muted);">Split your goal into manageable steps you can complete daily.</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm rounded-3 p-4" style="border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+                    <div class="mb-3">
+                        <span class="badge rounded-circle fs-5 text-white" style="background-color: var(--pathly-accent); width: 50px; height: 50px; display: inline-flex; align-items: center; justify-content: center;">
+                            3
+                        </span>
+                    </div>
+                    <i class="bi bi-check2-square fs-2 text-warning mb-3"></i>
+                    <h5 class="fw-bold mb-2">Plan & Execute</h5>
+                    <p class="text-muted mb-0" style="color: var(--pathly-muted);">Organize tasks daily and track progress to achieve your goals.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!--Visual section -->
+<section class="py-5" style="background-color: var(--pathly-bg);">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <!-- Right: Illustration / Mockup -->
+            <div class="col-md-6 text-center">
+                <img src="~/images/productivity-illustration.png" alt="Calm Productivity Illustration" class="img-fluid" style="max-height: 400px; border-radius: var(--card-radius); box-shadow: var(--shadow-md);">
+            </div>
+
+            <!-- Left: Text -->
+            <div class="col-md-6 mb-4 mb-md-0 text-center text-md-start">
+                <h2 class="fw-bold mb-3" style="color: var(--pathly-primary);">
+                    Stop feeling busy. Start making progress.
+                </h2>
+                <p class="lead mb-4" style="color: var(--pathly-muted);">
+                    Pathly keeps your goals, actions, and daily tasks connected in one clear system — so you know exactly what to do next.
+                </p>
+                <div class="text-center text-md-end">
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-lg" style="background-color: var(--pathly-accent); color: #fff; border-radius: var(--btn-radius);">
+                        Get Started — It’s Free
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!--Call to action section -->
+<section class="py-5" style="background-color: var(--pathly-accent);">
+    <div class="container text-center text-white">
+        <h2 class="fw-bold mb-4" style="color: #fff;">
+            Ready to build your path?
+        </h2>
+        <p class="lead mb-4" style="color: #fff;">
+            Start organizing your goals, tasks, and roadmaps in one clear system today.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a asp-controller="Account" asp-action="Register" class="btn btn-lg" style="background-color: #fff; color: var(--pathly-accent); font-weight: 600; border-radius: var(--btn-radius);">
+                Create Your Account
+            </a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-lg btn-outline-light" style="border-radius: var(--btn-radius);">
+                Log In
+            </a>
+        </div>
+    </div>
+</section>
