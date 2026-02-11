@@ -162,6 +162,9 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: var(--shadow-sm);
     border-radius: var(--border-radius);
     overflow: hidden;
+    opacity: 0; /* start hidden */
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
     .card:hover {
@@ -186,14 +189,24 @@ h1, h2, h3, h4, h5, h6 {
     color: #111827;
 }
 
-.shadow-sm {
-    box-shadow: var(--shadow-sm) !important;
+/* ============================================
+   SECTIONS
+   ============================================ */
+section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-/* ============================================
+/* Fade-in class applied when visible */
+.fade-in-up {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+    /* ============================================
    BUTTONS
    ============================================ */
-.btn {
+    .btn {
     font-weight: 500;
     border-radius: var(--border-radius);
     padding: 0.5rem 1rem;
