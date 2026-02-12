@@ -1,0 +1,82 @@
+﻿@model MicroTaskTracker.Models.ViewModels.Goals.GoalListViewModel
+
+@{
+    ViewData["Title"] = "My Goals";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Goals</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            + Create Goal
+        </a>
+    </div>
+
+    <!-- Filters placeholder -->
+    <div class="mb-4 p-3 border rounded bg-light">
+        <strong>Filters (coming soon)</strong>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var goal in Model.Goals)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm position-relative">
+
+                    <!-- Three dots dropdown (top right) -->
+                    <div class="dropdown position-absolute top-0 end-0 m-2">
+                        <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                            ⋮
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" asp-action="Details" asp-route-id="@goal.Id">Details</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-action="Edit" asp-route-id="@goal.Id">Edit</a>
+                            </li>
+                            <li>
+                                <form asp-action="Delete" asp-route-id="@goal.Id" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@goal.Title</h5>
+
+                        @if (!string.IsNullOrEmpty(goal.ShortDescription))
+                        {
+                            <p class="card-text text-muted">
+                                @goal.ShortDescription
+                            </p>
+                        }
+
+                        <div class="mt-auto">
+                            @if (goal.TargetDate.HasValue)
+                            {
+                                <div class="small text-muted mb-2">
+                                    Target: @goal.TargetDate.Value.ToShortDateString()
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge @(goal.IsActive ? "bg-success" : "bg-secondary")">
+                                    @(goal.IsActive ? "Active" : "Inactive")
+                                </span>
+
+                                <!-- Add to roadmap button ON EACH CARD -->
+                                <button class="btn btn-outline-primary btn-sm" disabled>
+                                    Add to roadmap
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
