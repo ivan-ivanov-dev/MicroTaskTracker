@@ -52,60 +52,57 @@
     @* Offcanvas sidebar (mobile) and persistent desktop sidebar rendered only for authenticated users *@
     @if (User?.Identity?.IsAuthenticated ?? false)
     {
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">MicroTaskTracker</h5>
-            @* Remove default "x" close button. Use our styled close button so it visually matches desktop toggle and moves with sidebar. *@
-            <button type="button" class="btn btn-sm btn-outline-secondary sidebar-close-btn d-lg-none" data-bs-dismiss="offcanvas"
-                aria-label="Close sidebar">
-                <span class="visually-hidden">Close</span>
-                <!-- Simple icon matching the collapse control -->
-                <span aria-hidden="true">⮜</span>
-            </button>
-        </div>
-        <div class="offcanvas-body d-flex flex-column">
-            <nav class="nav sidebar-nav">
-                <a class="sidebar-link" asp-controller="Dashboard" asp-action="Index"><span class="sidebar-link-text">Dashboard</span></a>
-                <a class="sidebar-link" asp-controller="Tasks" asp-action="Index"><span class="sidebar-link-text">Tasks</span></a>
-            </nav>
-
-            <div class="sidebar-footer mt-auto">
-                <div class="small text-muted mb-2">@User.Identity?.Name</div>
-                <a class="sidebar-link" asp-controller="Account" asp-action="Manage"><span class="sidebar-link-text">Account</span></a>
-                <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
-                </form>
+        @* Sidebar (Mobile) *@
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
+            <div class="offcanvas-header border-bottom">
+                <a asp-controller="Dashboard" asp-action="Index">
+                    <img src="~/images/PathlyLogo.png" alt="Pathly" style="height: 35px;" />
+                </a>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <nav class="sidebar-nav">
+                    <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
+                       asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                    <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks" ? "active" : "")"
+                       asp-controller="Tasks" asp-action="Index">Tasks</a>
+                </nav>
             </div>
         </div>
-    </div>
 
-    <aside class="sidebar-desktop d-none d-lg-flex" role="navigation" aria-label="Main navigation" id="sidebarDesktop">
-        <div class="sidebar-brand">
-            <span class="navbar-logo">MT</span>
-            <span class="sidebar-brand-text">MicroTaskTracker</span>
+        @* Sidebar (Desktop) *@
+        <aside class="sidebar-desktop d-none d-lg-flex" id="sidebarDesktop">
+            <div class="sidebar-brand">
+                @* Logo only - wrapped in a link to Dashboard *@
+                <a asp-controller="Dashboard" asp-action="Index" class="d-flex align-items-center">
+                    <img src="~/images/PathlyLogo.png" alt="Pathly" class="sidebar-logo-img" />
+                </a>
 
-            @* Collapse button inside sidebar so it moves with the sidebar and doesn't overlap content.
-               Placed at the top-right of the sidebar area. *@
-            <button id="sidebarCollapseBtn" class="btn btn-sm btn-outline-secondary sidebar-collapse-btn" aria-label="Toggle sidebar">
-                <span aria-hidden="true">⮜</span>
-            </button>
-        </div>
+                <button id="sidebarCollapseBtn" class="btn btn-sm sidebar-collapse-btn">
+                    <span aria-hidden="true">⮜</span>
+                </button>
+            </div>
 
-        <nav class="sidebar-nav">
-            <a class="sidebar-link" asp-controller="Dashboard" asp-action="Index"><span class="sidebar-link-text">Dashboard</span></a>
-            <a class="sidebar-link" asp-controller="Tasks" asp-action="Index"><span class="sidebar-link-text">Tasks</span></a>
-        </nav>
+            <nav class="sidebar-nav">
+                <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")"
+                   asp-controller="Dashboard" asp-action="Index">
+                    <span class="sidebar-link-text">Dashboard</span>
+                </a>
+                <a class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tasks" ? "active" : "")"
+                   asp-controller="Tasks" asp-action="Index">
+                    <span class="sidebar-link-text">Tasks</span>
+                </a>
+            </nav>
 
-        <div class="sidebar-footer">
-            <div class="small text-muted mb-2">@User.Identity?.Name</div>
-            <a class="sidebar-link" asp-controller="Account" asp-action="Manage"><span class="sidebar-link-text">Account</span></a>
-            <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
-            </form>
-        </div>
-    </aside>
+            <div class="sidebar-footer">
+                <div class="small fw-bold mb-2">@User.Identity?.Name</div>
+                <a class="sidebar-link" asp-controller="Account" asp-action="Manage">Account</a>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-sm btn-outline-danger w-100">Logout</button>
+                </form>
+            </div>
+        </aside>
     }
 
     <div class="container">
@@ -123,51 +120,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @* Small inline script to wire collapse behavior (keeps site.js unchanged) *@
-    <script>
-        (function () {
-            const collapseBtn = document.getElementById('sidebarCollapseBtn');
-            const bodyEl = document.body;
-            const COLLAPSED_CLASS = 'sidebar-collapsed';
-
-            function updateCollapseIcon(btn) {
-                if (!btn) return;
-                const icon = btn.querySelector('span[aria-hidden="true"]');
-                if (!icon) return;
-                const collapsed = bodyEl.classList.contains(COLLAPSED_CLASS);
-                // arrow points right when collapsed (to open), left when expanded (to close)
-                icon.textContent = collapsed ? '⮞' : '⮜';
-                btn.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
-                btn.setAttribute('title', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
-            }
-
-            if (collapseBtn) {
-                // set initial state on load
-                updateCollapseIcon(collapseBtn);
-
-                collapseBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    bodyEl.classList.toggle(COLLAPSED_CLASS);
-                    updateCollapseIcon(this);
-                });
-            }
-
-            // When offcanvas is shown, hide the fixed open button to avoid duplicate controls on mobile.
-            const offcanvasEl = document.getElementById('sidebarOffcanvas');
-            const openFixedBtn = document.querySelector('.sidebar-toggle-fixed');
-
-            if (offcanvasEl && openFixedBtn) {
-                offcanvasEl.addEventListener('show.bs.offcanvas', function () {
-                    openFixedBtn.style.display = 'none';
-                });
-                offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
-                    openFixedBtn.style.display = '';
-                });
-            }
-        })();
-    </script>
-
+    <script src="~/js/sidebar.js" asp-append-version="true"></script>   
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("Styles", required: false)
 </body>

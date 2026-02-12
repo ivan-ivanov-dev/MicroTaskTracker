@@ -69,7 +69,7 @@ namespace MicroTaskTracker.Services.Implementations
 
         public async Task<DashboardStatsViewModel> GetDashboardStatsAsync(string userId)
         {
-            var today = DateTime.UnixEpoch.Date;
+            var today = DateTime.UtcNow.Date;
 
             var userTasks = _context.Tasks.Where(t => t.UserId == userId);
 

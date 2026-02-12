@@ -1,111 +1,88 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿// 1. MODAL LOADING LOGIC
+document.addEventListener("click", function (e) {
+    const btn = e.target.closest("[data-modal-url]");
+    if (!btn) return;
 
-    // Auto-submit forms when priority changes
-    document.querySelectorAll("select[data-auto-submit='true']").forEach(select => {
-        select.addEventListener("change", function () {
-            this.form.submit();
-        });
-    });
+    e.preventDefault();
+    const url = btn.getAttribute("data-modal-url");
 
-    // Confirm delete
-    document.querySelectorAll("a[data-confirm-delete='true']").forEach(link => {
-        link.addEventListener("click", function (e) {
-            const ok = confirm("Are you sure you want to delete this task?");
-            if (!ok) {
-                e.preventDefault();
-            }
-        });
-    });
+    fetch(url, { credentials: "same-origin" })
+        .then(r => {
+            if (!r.ok) throw new Error("Failed to load");
+            return r.text();
+        })
+        .then(html => {
+            const bodyEl = document.getElementById("taskModalBody");
+            const titleEl = document.getElementById("taskModalTitle");
+            const modalEl = document.getElementById("taskModal");
 
-    // Delegate click to load partials into modal (supports existing modal ids)
-    document.addEventListener("click", function (e) {
-        const btn = e.target.closest("[data-modal-url]");
-        if (!btn) return;
+            bodyEl.innerHTML = html;
+            titleEl.textContent = btn.getAttribute("data-modal-title") || "Task";
 
-        e.preventDefault();
+            // Initialize and show the Bootstrap modal
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            if (!modal) modal = new bootstrap.Modal(modalEl);
+            modal.show();
 
-        const url = btn.getAttribute("data-modal-url");
-        if (!url) return;
-
-        fetch(url, { credentials: 'same-origin' })
-            .then(r => {
-                if (!r.ok) throw new Error(`Failed to load: ${r.statusText}`);
-                return r.text();
-            })
-            .then(html => {
-                // Prefer modal with id "taskModal", fall back to "createTaskModal"
-                const bodyEl = document.getElementById("taskModalBody")
-                    || document.querySelector("#createTaskModal .modal-body");
-                const titleEl = document.getElementById("taskModalTitle")
-                    || document.querySelector("#createTaskModal .modal-title");
-                const modalEl = document.getElementById("taskModal") || document.getElementById("createTaskModal");
-
-                if (bodyEl) {
-                    bodyEl.innerHTML = html;
-                } else {
-                    console.warn("Modal body element not found to inject HTML.");
-                }
-
-                if (titleEl) {
-                    const title = btn.getAttribute("data-modal-title") || titleEl.textContent;
-                    titleEl.textContent = title;
-                }
-
-                if (modalEl) {
-                    const modal = new bootstrap.Modal(modalEl);
-                    modal.show();
-                } else {
-                    console.warn("Modal element not found to show.");
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                if (window.showAlert) {
-                    window.showAlert("Failed to load dialog. Please try again.", "danger", true, false);
-                } else {
-                    alert("Failed to load dialog. Please try again.");
-                }
-            });
-    });
-    document.addEventListener("submit", function (e) {
-        const form = e.target;
-        if (!form.matches("#createTaskForm")) return;
-
-        e.preventDefault();
-
-        const formData = new FormData(form);
-
-        fetch(form.action, {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
+            // Re-bind validation if using jQuery Unobtrusive
+            if (window.jQuery && $.validator && $.validator.unobtrusive) {
+                const form = bodyEl.querySelector("form");
+                if (form) $.validator.unobtrusive.parse(form);
             }
         })
-            .then(r => {
-                if (r.status === 200 && r.headers.get("content-type")?.includes("text/html")) {
-                    return r.text(); // validation errors → return partial again
-                }
-                if (r.ok) return null; // success
-                throw new Error("Request failed");
-            })
-            .then(html => {
-                if (html) {
-                    // Re-render partial with validation errors
-                    document.getElementById("taskModalBody").innerHTML = html;
-                } else {
-                    // Success → close modal and reload page
-                    const modalEl = document.getElementById("taskModal");
-                    const modal = bootstrap.Modal.getInstance(modalEl);
-                    modal.hide();
-                    window.location.reload();
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Failed to save task.");
-            });
-    });
-
-
+        .catch(err => {
+            console.error(err);
+            alert("Failed to load dialog.");
+        });
 });
+
+// 2. FORM SUBMISSION LOGIC
+document.addEventListener("submit", function (e) {
+    const form = e.target.closest(".task-form");
+    if (!form) return;
+
+    // STOP the browser from doing a traditional page reload
+    e.preventDefault();
+    e.stopPropagation();
+
+    const formData = new FormData(form);
+    const actionUrl = form.getAttribute("action");
+
+    fetch(actionUrl, {
+        method: "POST",
+        body: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+        .then(async response => {
+            const contentType = response.headers.get("content-type");
+
+            // SUCCESS: Server returned 200 OK (from our return Ok() in Controller)
+            if (response.ok && (!contentType || !contentType.includes("text/html"))) {
+                const modalEl = document.getElementById('taskModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+
+                // Redirect back to Index
+                window.location.href = '/Tasks/Index';
+                return;
+            }
+
+            // FAILURE: Server returned PartialView HTML (validation errors)
+            if (contentType && contentType.includes("text/html")) {
+                const html = await response.text();
+                const bodyEl = document.getElementById("taskModalBody");
+                bodyEl.innerHTML = html;
+
+                // CRITICAL: Re-bind validation to the new HTML so errors show up
+                if (window.jQuery && $.validator && $.validator.unobtrusive) {
+                    $.validator.unobtrusive.parse(bodyEl.querySelector("form"));
+                }
+            } else {
+                throw new Error("Unexpected response from server");
+            }
+        })
+        .catch(err => {
+            console.error("Save error:", err);
+            alert("An error occurred. Check the console for details.");
+        });
+}, true); // 'true' helps catch the event before other handlers

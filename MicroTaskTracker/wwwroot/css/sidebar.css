@@ -1,13 +1,11 @@
-﻿/* Sidebar styles moved out of layout to keep layout clean.
-   This file now contains sidebar visuals including a clear black outline
-   and collapsed-state behavior. */
-
+﻿/* ============================================
+   SIDEBAR CORE STRUCTURE
+   ============================================ */
 .sidebar-desktop {
+    background: #f8f9fa;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 2px 0 5px rgba(0,0,0,0.02);
     display: none;
-    background: var(--color-surface);
-    /* prominent black outline so the sidebar edge is always clear */
-    border-right: 2px solid #000;
-    box-shadow: var(--shadow-sm);
 }
 
 @media (min-width: 992px) {
@@ -18,21 +16,20 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 220px;
+        width: 240px; /* Slightly wider for better breathing room */
         padding: 1.25rem 1rem;
         gap: 1rem;
         z-index: 1030;
-        transition: width 180ms ease;
+        transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1);
         overflow: hidden;
     }
 
-    /* shift main content when sidebar is visible on desktop */
     .main-content {
-        margin-left: 220px;
-        transition: margin-left 180ms ease;
+        margin-left: 240px;
+        transition: margin-left 200ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* collapsed state (narrow sidebar) */
+    /* Collapsed State */
     body.sidebar-collapsed .sidebar-desktop {
         width: 72px;
     }
@@ -41,96 +38,130 @@
         margin-left: 72px;
     }
 
-    /* hide textual labels when collapsed */
     body.sidebar-collapsed .sidebar-link-text,
     body.sidebar-collapsed .sidebar-brand-text {
         display: none;
     }
-
-    /* center icons/text when collapsed */
+    body.sidebar-collapsed .sidebar-brand {
+        justify-content: center;
+        padding-left: 0;
+    }
     body.sidebar-collapsed .sidebar-link {
         justify-content: center;
+        padding: 0.8rem 0;
+    }
+
+    body.sidebar-collapsed .sidebar-logo-img {
+        height: 28px;
     }
 }
 
-/* Branding area */
+/* ============================================
+   BRANDING & LOGO
+   ============================================ */
 .sidebar-brand {
-    font-weight: var(--font-weight-bold);
-    font-size: 1.125rem;
-    margin-bottom: .5rem;
+    margin-bottom: 1.5rem; /* Give it a bit more space */
     display: flex;
     align-items: center;
-    gap: .5rem;
+    justify-content: flex-start; /* Keeps it left-aligned with the buttons below */
+    padding-left: 0.5rem;
     position: relative;
+    min-height: 40px;
 }
 
-/* collapse button that sits inside the sidebar (top-right)
-   so it moves with the sidebar and doesn't overlap main content */
-.sidebar-collapse-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    line-height: 1;
-    padding: .25rem .4rem;
+.sidebar-logo-img {
+    max-width: 100%;
+    height: 38px; /* Slightly larger since it's now the solo star */
+    width: auto;
+    object-fit: contain;
+    transition: all 0.2s ease;
 }
 
-/* Offcanvas mobile close button - styled like collapse control but shown only on mobile */
-.sidebar-close-btn {
-    border: none;
-    background: transparent;
-    font-size: 1.1rem;
-    padding: .125rem .35rem;
-}
-
-/* Navigation */
+/* ============================================
+   NAVIGATION & ACTIVE STATE
+   ============================================ */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: .25rem;
-    margin-top: .5rem;
-}
-
-.sidebar-footer {
-    margin-top: auto;
-    padding-top: .5rem;
-    border-top: 1px solid var(--color-border);
+    gap: 0.4rem;
+    margin-top: 0.5rem;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
-    gap: .5rem;
-    padding: .5rem .75rem;
-    border-radius: .5rem;
-    color: var(--color-text-secondary);
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    color: #555;
     text-decoration: none;
-    transition: background var(--transition-fast), color var(--transition-fast);
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.sidebar-link:hover {
-    background: var(--color-bg-tertiary);
-    color: var(--color-primary);
-    text-decoration: none;
+    /* The Selected Page Highlight */
+    .sidebar-link.active {
+        background-color: var(--pathly-primary);
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-link:hover:not(.active) {
+        background-color: rgba(0, 0, 0, 0.05);
+        color: var(--pathly-primary);
+        transform: translateX(4px);
+    }
+
+/* ============================================
+   CONTROLS (Buttons)
+   ============================================ */
+.sidebar-collapse-btn {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #888;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    position: absolute;
+    right: -5px;
+    top: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
 }
 
-/* Small fixed toggle (mobile) */
+    .sidebar-collapse-btn:hover {
+        background: var(--pathly-primary);
+        color: #fff;
+        border-color: var(--pathly-primary);
+    }
+
+/* ============================================
+   FOOTER & MOBILE
+   ============================================ */
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.08);
+}
+
 .sidebar-toggle-fixed {
     position: fixed;
     top: 0.75rem;
     left: 0.75rem;
     z-index: 2000;
-    border-radius: .375rem;
-    padding: .35rem .5rem;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* ensure offcanvas body uses full height so footer sits at bottom */
-.offcanvas-body.d-flex {
-    min-height: calc(100vh - 56px);
+.offcanvas.offcanvas-start {
+    border-right: 2px solid var(--pathly-primary);
+}
+
+.offcanvas-body {
     display: flex;
     flex-direction: column;
-}
-
-/* keep offcanvas visually outlined similar to desktop sidebar */
-.offcanvas.offcanvas-start {
-    border-right: 2px solid #000;
 }
