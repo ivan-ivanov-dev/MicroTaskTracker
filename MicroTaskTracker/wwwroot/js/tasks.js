@@ -42,7 +42,7 @@
             const errorSpan = document.getElementById('TagError');
             const submitBtn = document.querySelector('button[type="submit"]');
 
-            const isInvalid = checkedCount > 1;
+            const isInvalid = checkedCount > 4;
             errorSpan.classList.toggle('d-none', !isInvalid);
             if (submitBtn) submitBtn.disabled = isInvalid;
         }

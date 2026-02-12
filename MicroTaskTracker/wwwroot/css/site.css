@@ -32,10 +32,13 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin-bottom: 0;
     background-color: var(--pathly-bg);
     color: var(--pathly-text);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* ============================================
@@ -120,48 +123,73 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================
-   FOOTER
+   ENHANCED FOOTER STYLING
    ============================================ */
 .footer {
-    background-color: var(--pathly-bg);
-    border-top: 1px solid rgba(0,0,0,0.05);
+    /* Subtle shadow to give it depth */
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.02);
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.footer-brand-section {
+    font-size: 1rem;
     color: var(--pathly-text);
-    padding: 1.5rem 0;
-    font-size: 0.9rem;
+    /* divider matches the slightly darker tone */
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+    padding-right: 1.5rem;
 }
 
-    .footer a {
-        color: var(--pathly-primary);
-        text-decoration: none;
-        font-weight: 600;
-    }
+/* Bigger, more visible tip text */
+.footer-tip-text {
+    font-size: 1.15rem;
+    letter-spacing: -0.2px;
+    color: var(--pathly-text);
+}
+
 #tip-container {
-    transition: opacity 0.3s ease;
-    min-width: 200px;
-    background-color: #fdfdfd !important;
-    font-style: italic;
-    color: #444;
+    transition: all 0.3s ease;
+    min-width: 320px;
+    max-width: 600px;
+    /* Keeps the tip "card" white so it's the focus */
+    background-color: #ffffff !important;
 }
 
-#reroll-tip {
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    padding: 0;
+    #tip-container:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md) !important;
+    }
+
+/* Reroll button alignment fix */
+.line-height-1 {
+    line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.4s ease;
+    width: 40px;
+    height: 40px;
 }
 
-    #reroll-tip:active {
-        transform: rotate(180deg);
+/* ============================================
+   MATCHING FOOTER BACKGROUND
+   ============================================ */
+.custom-footer-bg {
+    background-color: #EFEBE3 !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+    margin-top: auto; /* Pushes it to the bottom of the flex container */
+}
+
+@media (max-width: 768px) {
+    .footer-brand-section {
+        border-right: none;
+        padding-right: 0;
+        margin-bottom: 0.5rem;
     }
 
-.footer a {
-    transition: color 0.2s ease;
+    .footer-tip-text {
+        font-size: 1rem;
+    }
 }
-
 /* ============================================
    MAIN CONTENT AREA
    ============================================ */
@@ -170,6 +198,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: margin-left 0.3s;
     min-height: calc(100vh - 200px);
     animation: fadeIn 0.3s ease-in;
+    flex: 1 0 auto;
 }
 
 @keyframes fadeIn {

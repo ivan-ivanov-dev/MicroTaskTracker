@@ -1,121 +1,157 @@
 ﻿/* ============================================
-   AUTH FORM STYLING
+   AUTH FORM STYLING (Synchronized)
    ============================================ */
-body.auth-page {
-    background-color: var(--pathly-bg);
+
+/* Force the body to allow full-screen centering */
+.auth-page-body {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Ensure the layout container takes full height */
+.auth-container-centered {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-}
-
-.auth-form {
+    min-height: 100vh; /* Full viewport height */
     width: 100%;
-    max-width: 480px;
-    padding: 2rem;
-    background: #fff;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid #e5e7eb;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-    .auth-form.fade-in-up {
-        opacity: 1;
-        transform: translateY(0);
+/* Force main content to expand and remove sidebar gaps */
+.auth-page-body .main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The Container for the Form + Back Button */
+.auth-view-wrapper {
+    width: 100%;
+    max-width: 550px;
+    margin: 2rem;
+    animation: authFadeIn 0.6s ease-out forwards;
+}
+
+/* The "Back to Home" Link above the card */
+.back-link-wrapper {
+    margin-bottom: 1.5rem;
+}
+
+    .back-link-wrapper a {
+        color: #6c757d;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: color 0.2s;
     }
 
+        .back-link-wrapper a:hover {
+            color: var(--pathly-primary);
+        }
+
+/* The Auth Card */
+.auth-form {
+    width: 100%;
+    padding: 3.5rem !important;
+    background: white;
+    border-radius: 28px !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+    border: 1px solid rgba(0,0,0,0.02);
+}
+
     .auth-form h2 {
-        color: var(--pathly-primary);
-        font-weight: 700;
-        margin-bottom: 0.5rem;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1a1a1a;
         text-align: center;
+        margin-bottom: 0.5rem;
     }
 
     .auth-form .form-label {
         font-weight: 600;
-        color: var(--pathly-text);
+        margin-bottom: 0.5rem;
     }
 
     .auth-form .form-control {
-        border-radius: var(--border-radius);
-        border: 1px solid #d1d5db;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        border: 1px solid #dee2e6;
     }
 
         .auth-form .form-control:focus {
-            border-color: var(--pathly-accent);
-            box-shadow: 0 0 0 0.2rem rgba(244, 166, 42, 0.25);
-            outline: none;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+            border-color: #0d6efd;
         }
-
-    .auth-form .error-text {
-        color: #d9534f;
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
-    }
 
 .auth-actions {
     display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
     .auth-actions .btn-primary {
-        background-color: var(--pathly-accent);
-        color: #fff;
-        font-weight: 600;
-        border: none;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        padding: 0.9rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.05rem;
     }
-
-        .auth-actions .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
 
     .auth-actions .btn-link {
-        color: var(--pathly-primary);
-        font-weight: 500;
-        text-decoration: underline;
+        text-align: center;
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.9rem;
     }
 
+/* Password Strength Meter */
 .password-strength {
-    height: 8px;
-    background: #f1f1f1;
-    border-radius: 4px;
+    height: 6px;
+    background: #eee;
+    margin-top: 10px;
+    border-radius: 10px;
     overflow: hidden;
-    margin-top: 0.5rem;
 }
 
     .password-strength .bar {
         height: 100%;
-        width: 0%;
-        transition: width 0.25s ease;
-        background: #e0e0e0;
+        width: 0;
+        transition: width 0.3s, background-color 0.3s;
     }
 
     .password-strength.weak .bar {
         width: 25%;
-        background: var(--pathly-accent);
+        background: #ff4d4d;
     }
 
     .password-strength.fair .bar {
         width: 50%;
-        background: #f4b74a;
+        background: #ffa64d;
     }
 
     .password-strength.good .bar {
         width: 75%;
-        background: #4fbfa8;
+        background: #2ecc71;
     }
 
     .password-strength.strong .bar {
         width: 100%;
-        background: #0f4c5c;
+        background: #27ae60;
     }
+
+@keyframes authFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

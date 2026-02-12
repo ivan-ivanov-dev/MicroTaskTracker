@@ -13,35 +13,46 @@
     <partial name="_Favicons" />
 </head>
 
-<body>
-    @* Header shown only for anonymous users *@
-    @if (!(User?.Identity?.IsAuthenticated ?? false))
+@{
+        // Check if we are on Login or Register pages
+        var isAuthPage = ViewContext.RouteData.Values["Controller"]?.ToString() == "Account" &&
+                                          (ViewContext.RouteData.Values["Action"]?.ToString() == "Login" ||
+                                            ViewContext.RouteData.Values["Action"]?.ToString() == "Register");
+
+        // Check if we are on the Landing Page
+        var isLandingPage = ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" &&
+                                                ViewContext.RouteData.Values["Action"]?.ToString() == "Index";
+}
+
+<body class="@(isAuthPage ? "auth-page-body" : "")">
+    @* Header: ONLY on Landing Page for anonymous users *@
+    @if (!User.Identity.IsAuthenticated && isLandingPage)
     {
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-transparent border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light bg-transparent border-bottom mb-3">
+                <div class="container-fluid">
                     <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
                         <img src="~/images/PathlyLogo.png" alt="Pathly" class="app-logo" />
                     </a>
                     <button class="navbar-toggler navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1"></ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
-                        </li>
-                    </ul>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1"></ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
     }
     else
     {
@@ -52,8 +63,8 @@
     </button>
     }
 
-    @* Offcanvas sidebar (mobile) and persistent desktop sidebar rendered only for authenticated users *@
-    @if (User?.Identity?.IsAuthenticated ?? false)
+    @* Sidebar: Only for Authenticated Users *@
+    @if (User.Identity.IsAuthenticated)
     {
         @* Sidebar (Mobile) *@
         <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
@@ -160,32 +171,45 @@
         </aside>
     }
 
-    <div class="container">
+    <div class="@(isAuthPage ? "auth-container-centered" : "container")">
         <main role="main" class="main-content pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-auto py-3">
-        <div class="container">
-            <div class="row align-items-center">
-                @* Copyright Info *@
-                <div class="col-md-4 text-center text-md-start">
-                    &copy; @DateTime.UtcNow.Year - <span class="fw-bold text-primary">Pathly</span>
-                </div>
+    @if (!isAuthPage)
+    {
+        <footer class="footer mt-auto py-4 custom-footer-bg">
+            <div class="container">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-4">
 
-                @* Productivity Tip (The Dynamic Part) *@
-                <div class="col-md-8 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
-                    <div id="tip-container" class="me-3 p-2 bg-light rounded border-start border-primary border-4 shadow-sm" style="font-size: 0.85rem; max-width: 400px;">
-                        <span id="productivity-tip">Small steps lead to big changes.</span>
+                    @* Combined Copyright & Brand *@
+                    <div class="footer-brand-section text-nowrap">
+                        <span class="small">&copy; @DateTime.UtcNow.Year</span>
+                        <span class="fw-bold text-primary ms-1">Pathly</span>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="reroll-tip" title="New Tip">
-                        <span style="font-size: 1.1rem;">↻</span>
-                    </button>
+
+                    @* Enhanced Tip Container *@
+                    <div class="d-flex align-items-center gap-2">
+                        <div id="tip-container" class="p-3 bg-light rounded-3 border-start border-primary border-4 shadow-sm">
+                            <i class="me-2 text-primary">💡</i>
+                            <span id="productivity-tip" class="fw-medium text-dark footer-tip-text">
+                                Small steps lead to big changes.
+                            </span>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-primary rounded-circle p-2 line-height-1" id="reroll-tip" title="New Tip">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                            </svg>
+                        </button>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

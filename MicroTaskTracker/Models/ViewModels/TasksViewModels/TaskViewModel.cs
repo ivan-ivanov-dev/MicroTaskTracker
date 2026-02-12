@@ -17,5 +17,6 @@ namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
         public DateTime CreatedOn { get; set; }
         public TaskPriority Priority { get; set; } = TaskPriority.Low;
         public bool IsCompleted { get; set; }
+        
     }
 }

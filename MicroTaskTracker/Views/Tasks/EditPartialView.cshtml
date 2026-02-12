@@ -26,7 +26,7 @@
         <span asp-validation-for="DueDate" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label fw-bold">Select Tag (Only 1 allowed)</label>
+        <label class="form-label fw-bold">Select Tag (Only 4 allowed)</label>
 
         @if (!Model.AvailableTags.Any())
         {
@@ -52,7 +52,7 @@
                 }
             </div>
             <span id="TagError" class="text-danger small d-none mt-2">
-                <i class="bi bi-exclamation-circle"></i> Please select only one tag per task.
+                <i class="bi bi-exclamation-circle"></i>Please select no more than 4 tags per task.
             </span>
         }
     </div>
