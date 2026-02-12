@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
 {
@@ -13,5 +14,7 @@ namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
         [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
         public string? Description { get; set; }
         public DateTime? DueDate { get; set; }
+        public List<int> SelectedTagIds { get; set; } = new List<int>();
+        public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
     }
 }

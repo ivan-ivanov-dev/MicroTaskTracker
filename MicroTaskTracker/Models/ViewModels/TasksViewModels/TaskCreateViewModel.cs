@@ -1,4 +1,5 @@
-﻿using MicroTaskTracker.Models.DBModels;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using MicroTaskTracker.Models.DBModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
@@ -14,5 +15,7 @@ namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
 
         public DateTime? DueDate { get; set; }
         public TaskPriority Priority { get; set; }
+        public List<int> SelectedTagIds { get; set; } = new List<int>();
+        public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
     }
 }
