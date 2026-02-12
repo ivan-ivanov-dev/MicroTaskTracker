@@ -3,6 +3,7 @@ using MicroTaskTracker.Data;
 using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels.Goals;
 using MicroTaskTracker.Services.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MicroTaskTracker.Services.Implementations
 {
@@ -45,20 +46,43 @@ namespace MicroTaskTracker.Services.Implementations
             return true;
         }
 
-        public async Task<List<GoalViewModel>> GetAllGoalsAsync(string userId)
+        public async Task<GoalQueryModel> GetAllAsync(GoalQueryModel queryModel, string userId)
         {
-            var goals = await _context.Goals
-                .Where(g => g.UserId == userId) 
-                .Select(g => new GoalViewModel 
-                { 
-                    Id = g.Id, 
-                    Title = g.Title, 
-                    ShortDescription = g.ShortDescription, 
-                    TargetDate = g.TargetDate, 
-                    IsActive = g.IsActive }
-                ).ToListAsync(); 
-            
-            return goals;
+            var goalsQuery = _context.Goals
+                .Where(g => g.UserId == userId)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(queryModel.SearchTerm))
+            {
+                goalsQuery = goalsQuery.Where(g => g.Title.ToLower().Contains(queryModel.SearchTerm.ToLower()));
+            }
+
+            goalsQuery = queryModel.SortOrder switch
+            {
+                GoalSortOrder.TitleAsc => goalsQuery.OrderBy(g => g.Title),
+                GoalSortOrder.TitleDesc => goalsQuery.OrderByDescending(g => g.Title),
+                _ => goalsQuery
+            };
+
+            var goals = await goalsQuery
+                .Select(g => new GoalViewModel
+                {
+                    Id = g.Id,
+                    Title = g.Title,
+                    ShortDescription = g.ShortDescription,
+                    TargetDate = g.TargetDate,
+                    IsActive = g.IsActive
+                })
+                .ToListAsync();
+
+            var result = new GoalListViewModel 
+            { 
+                Goals = goals 
+            };
+
+            queryModel.Goals = result;
+            return queryModel;
+
         }
 
         public Task<GoalDetailsViewModel?> GetDetailsAsync(int id, string userId)

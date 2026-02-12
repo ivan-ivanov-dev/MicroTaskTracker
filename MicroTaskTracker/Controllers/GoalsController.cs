@@ -19,17 +19,12 @@ namespace MicroTaskTracker.Controllers
             _goalService = goalService;
             _userManager = userManager;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(GoalQueryModel queryModel)
         {
             var userId = _userManager.GetUserId(User);
-            var goals = await _goalService.GetAllGoalsAsync(userId);
+            var goals = await _goalService.GetAllAsync(queryModel ,userId);
 
-            var model = new GoalListViewModel
-            {
-                Goals = goals
-            };
-
-            return View(model);
+            return View(goals);
         }
         [HttpGet]
         public IActionResult Create()
