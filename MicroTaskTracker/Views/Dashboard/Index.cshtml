@@ -3,144 +3,100 @@
 @{
     ViewData["Title"] = "Dashboard";
 }
+<div class="dashboard-wrapper">
 
-<!-- CHANGED: Improved header spacing and button styling -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h2 mb-0">@ViewData["Title"]</h1>
-    <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary">View All Tasks</a>
-</div>
+    <!-- Dashboard Header -->
+    <div class="mb-5 text-center">
+        <h1 class="display-4 fw-bold">@ViewData["Title"]</h1>
+        <p class="lead text-muted mt-2">
+            Let's make progress today! Track your tasks and goals, and take action to move forward.
+        </p>
+        <p class="dashboard-motivation">Keep your momentum going! Track your tasks, focus on your current goal, and take meaningful steps today.</p>
+    </div>
 
-<!-- CHANGED: Improved card spacing with g-4 (was g-3) -->
-<div class="row g-4 mb-5">
-    <div class="col-sm-6 col-md-3">
-        <!-- CHANGED: Enhanced card styling with better hierarchy -->
-        <div class="card text-center h-100">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Tasks</h6>
-                <p class="display-6 mb-0 fw-bold">@Model.Stats.TotalTasks</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-3">
-        <div class="card text-center h-100">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Completed</h6>
-                <p class="display-6 mb-0 fw-bold text-success">@Model.Stats.CompletedTasks</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-3">
-        <div class="card text-center h-100">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Due Today</h6>
-                <p class="display-6 mb-0 fw-bold text-primary">@Model.Stats.TotalTasksDueToday</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-3">
-        <div class="card text-center h-100">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Completed Today</h6>
-                <p class="display-6 mb-0 fw-bold">@Model.Stats.CompletedTasksDueToday</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- CHANGED: Updated row gap from default to g-4 for consistent spacing -->
-<div class="row g-4">
-    <div class="col-lg-4 mb-3">
-        <div class="card h-100">
-            <div class="card-header">
-                Due Today
-            </div>
-            <div class="card-body">
-                @if (!Model.FocusLists.DueTodayTasks.Any())
+    <!-- Progress Bars Section -->
+    <div class="dashboard-progress">
+        <div class="mb-5" style="max-width: 600px; margin: 0 auto;">
+            <!-- Total Tasks Progress -->
+            @if (Model.Stats.TotalTasksDueToday > 0)
+            {
+                <div class="mb-4">
+                    <h6 class="fw-semibold">Today's Tasks Progress</h6>
+                    <div class="progress" style="height: 24px;">
+                        <div class="progress-bar bg-primary" role="progressbar"
+                             style="width: @(Model.Stats.CompletedTasksDueToday * 100 / Model.Stats.TotalTasksDueToday)%"
+                             aria-valuenow="@Model.Stats.CompletedTasksDueToday"
+                             aria-valuemin="0"
+                             aria-valuemax="@Model.Stats.TotalTasksDueToday">
+                            @Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="mb-4 text-center">
+                    <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary">Create Your First Task</a>
+                </div>
+            }
+            <!-- Weekly Progress Placeholder -->
+            <div class="mb-4">
+                <h6 class="fw-semibold">Weekly Progress</h6>
+                @if (Model.Stats.CompletedTasks > 0)
                 {
-                    <!-- CHANGED: Better empty state styling -->
-                    <div class="text-muted text-center py-3">No tasks due today.</div>
+                    <div class="progress" style="height: 24px;">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             style="width: @(Model.Stats.CompletedTasks * 100 / Model.Stats.TotalTasks)%"
+                             aria-valuenow="@Model.Stats.CompletedTasks"
+                             aria-valuemin="0"
+                             aria-valuemax="@Model.Stats.TotalTasks">
+                            @Model.Stats.CompletedTasks / @Model.Stats.TotalTasks
+                        </div>
+                    </div>
                 }
                 else
                 {
-                    <ul class="list-group list-group-flush">
-                        @foreach (var t in Model.FocusLists.DueTodayTasks)
-                        {
-                            <!-- CHANGED: Improved list item layout and spacing -->
-                            <li class="list-group-item d-flex justify-content-between align-items-start px-0">
-                                <div class="flex-grow-1">
-                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-decoration-none">@t.Title</a>
-                                    <div class="small text-muted mt-1">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy") : "No due date")</div>
-                                </div>
-                                <div class="ms-2">
-                                    <span class="badge bg-@(t.IsCompleted ? "secondary" : "primary")">@t.Priority</span>
-                                </div>
-                            </li>
-                        }
-                    </ul>
+                    <div class="text-center py-3 text-muted">
+                        No tasks completed this week. Start planning your week to see progress!
+                    </div>
                 }
             </div>
-        </div>
     </div>
 
-    <div class="col-lg-4 mb-3">
-        <div class="card h-100">
-            <div class="card-header">
-                Future — High Priority
+        <hr class="dashboard-divider my-5" />
+        <!-- Action Cards Section -->
+        <div class="row g-4 justify-content-center">
+            <!-- Create Goal Card -->
+            <div class="col-md-4">
+                <div class="card h-100 text-center hover-card">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Create a Goal</h5>
+                        <p class="card-text text-muted">Define your ambitions and take the first step toward achieving them.</p>
+                        <a asp-controller="Goals" asp-action="Create" class="dashboard-card dashboard-card-goal col-md-3"></a>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @if (!Model.FocusLists.FutureHighPriorityTasks.Any())
-                {
-                    <div class="text-muted text-center py-3">No future high priority tasks.</div>
-                }
-                else
-                {
-                    <ul class="list-group list-group-flush">
-                        @foreach (var t in Model.FocusLists.FutureHighPriorityTasks)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-start px-0">
-                                <div class="flex-grow-1">
-                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-decoration-none">@t.Title</a>
-                                    <div class="small text-muted mt-1">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy") : "No due date")</div>
-                                </div>
-                                <div class="ms-2">
-                                    <span class="badge bg-@(t.IsCompleted ? "secondary" : "danger")">@t.Priority</span>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                }
-            </div>
-        </div>
-    </div>
 
-    <div class="col-lg-4 mb-3">
-        <div class="card h-100">
-            <div class="card-header">
-                Overdue
+            <!-- Roadmap Card -->
+            <div class="col-md-4">
+                <div class="card h-100 text-center hover-card">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Build a Roadmap</h5>
+                        <p class="card-text text-muted">Break your goals into actionable steps and stay on track.</p>
+                        <a asp-controller="Roadmaps" asp-action="Index" class="dashboard-card dashboard-card-roadmap col-md-3"></a>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @if (!Model.FocusLists.OverdueTasks.Any())
-                {
-                    <div class="text-muted text-center py-3">No overdue tasks.</div>
-                }
-                else
-                {
-                    <ul class="list-group list-group-flush">
-                        @foreach (var t in Model.FocusLists.OverdueTasks)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-start px-0">
-                                <div class="flex-grow-1">
-                                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="fw-semibold text-decoration-none text-danger">@t.Title</a>
-                                    <div class="small text-muted mt-1">@((t.DueDate.HasValue) ? t.DueDate.Value.ToLocalTime().ToString("MMM dd, yyyy") : "No due date")</div>
-                                </div>
-                                <div class="ms-2">
-                                    <span class="badge bg-@(t.IsCompleted ? "secondary" : "danger")">@t.Priority</span>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                }
+
+            <!-- Daily Planner Card -->
+            <div class="col-md-4">
+                <div class="card h-100 text-center hover-card">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Plan Your Day</h5>
+                        <p class="card-text text-muted">Organize your tasks and ensure progress every day.</p>
+                        <a asp-controller="Tasks" asp-action="Index" class="dashboard-card dashboard-card-daily col-md-3"></a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 </div>

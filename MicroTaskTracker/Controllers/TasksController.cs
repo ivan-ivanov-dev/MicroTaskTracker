@@ -41,6 +41,7 @@ namespace MicroTaskTracker.Controllers
             return PartialView("CreatePartialView",model);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAsync(TaskCreateViewModel model)
         {
             if (String.IsNullOrWhiteSpace(model.Title))
@@ -55,14 +56,14 @@ namespace MicroTaskTracker.Controllers
 
             if (!ModelState.IsValid)
             {
-            return PartialView("CreatePartialView",model);
+                return PartialView("CreatePartialView", model);
             }
 
             var userId = _userManager.GetUserId(User);
             try
             {
                 await _taskService.CreateAsync(model,userId);
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -87,6 +88,7 @@ namespace MicroTaskTracker.Controllers
 
             var editModel = new TaskEditViewModel
             {
+                Id = model.Id,
                 Title = model.Title,
                 Description = model.Description,
                 DueDate = model.DueDate,
@@ -96,8 +98,10 @@ namespace MicroTaskTracker.Controllers
             return PartialView("EditPartialView", editModel);
         }
         [HttpPost]
-        public async Task<IActionResult> EditAsync(int id, TaskEditViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAsync(TaskEditViewModel model)
         {
+            var id = model.Id;
             var userId = _userManager.GetUserId(User);
 
             if (String.IsNullOrWhiteSpace(model.Title))
@@ -115,16 +119,15 @@ namespace MicroTaskTracker.Controllers
                 return PartialView("EditPartialView", model);
             }
 
-            try
+            await _taskService.UpdateAsync(id, model, userId);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                await _taskService.UpdateAsync(id, model, userId);
-                return RedirectToAction(nameof(Index));
+                return Ok(); // JS will see this and reload the Index
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "An error occurred while editing the task: " + ex.Message);
-                return PartialView("EditPartialView", model);
-            }
+
+            // Fallback for traditional form submission
+            return RedirectToAction("Index", "Tasks");
         }
 
         /*Delete Tasks*/
