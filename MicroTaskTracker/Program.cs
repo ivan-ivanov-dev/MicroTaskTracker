@@ -23,6 +23,7 @@ namespace MicroTaskTracker
             
             builder.Services.AddScoped<ITaskService, TaskService>();
             builder.Services.AddScoped<IDashboardService, DashboardService>();
+            builder.Services.AddScoped<ITagService, TagService>();
 
             builder.Services.AddControllersWithViews();
 
