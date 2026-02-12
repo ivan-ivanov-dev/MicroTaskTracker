@@ -18,7 +18,7 @@ namespace MicroTaskTracker.Services.Implementations
         }
         public async Task CreateAsync(TaskCreateViewModel model, string userId)
         {
-            
+
             var task = new TaskItem
             {
                 Title = model.Title,
@@ -27,7 +27,12 @@ namespace MicroTaskTracker.Services.Implementations
                 CreatedOn = DateTime.UtcNow,
                 IsCompleted = false,
                 Priority = TaskPriority.Low,
-                UserId = userId
+                UserId = userId,
+                TaskTags = model.SelectedTagIds.Select(tagId => new TaskTag
+                {
+                    TagId = tagId
+
+                }).ToList()
             };
 
             _context.Tasks.Add(task);
