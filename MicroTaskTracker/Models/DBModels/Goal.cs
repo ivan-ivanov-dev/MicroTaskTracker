@@ -18,6 +18,5 @@ namespace MicroTaskTracker.Models.DBModels
         public string UserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
 
-        public ICollection<ActionItem> Actions { get; set; } = new List<ActionItem>();
     }
 }
