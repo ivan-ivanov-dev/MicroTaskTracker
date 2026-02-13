@@ -109,10 +109,20 @@
                                         @(goal.IsActive ? "Active" : "Inactive")
                                     </span>
 
-                                    <!-- Add to roadmap placeholder -->
-                                    <button class="btn btn-outline-primary btn-sm" disabled>
-                                        Add to roadmap
-                                    </button>
+                                    @if (goal.HasRoadmap)
+                                    {
+                                        <a asp-controller="Roadmap" asp-action="Details" asp-route-id="@goal.RoadmapId"
+                                           class="btn btn-info btn-sm">
+                                            <i class="bi bi-eye"></i> View Roadmap
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Roadmap" asp-action="Create" asp-route-goalId="@goal.Id"
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-map"></i> + Roadmap
+                                        </a>
+                                    }
                                 </div>
                             </div>
                         </div>
