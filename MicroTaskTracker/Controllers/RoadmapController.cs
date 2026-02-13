@@ -31,12 +31,7 @@ namespace MicroTaskTracker.Controllers
         public async Task<IActionResult> Create(int? goalId)
         {
             var userId = _userManager.GetUserId(User);
-            var model = new RoadmapCreateViewModel();
-
-            for (int i = 0; i < 3; i++)
-            {
-                model.Actions.Add(new ActionItemCreateViewModel());
-            }
+            var model = new RoadmapCreateViewModel { IsEditing = false };
 
             if (goalId.HasValue)
             {
@@ -52,11 +47,25 @@ namespace MicroTaskTracker.Controllers
                 }
             }
 
-            return View(model);
+            for (int i = 0; i < 3; i++)
+            {
+                model.Actions.Add(new ActionItemCreateViewModel());
+            }
+
+            return View("RoadmapForm", model);
+        }
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+            var model = await _roadmapService.GetRoadmapForEditAsync(id, userId);
+
+            if (model == null) return NotFound();
+
+            return View("RoadmapForm", model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RoadmapCreateViewModel model)
+        public async Task<IActionResult> Save(RoadmapCreateViewModel model)
         {
             var userId = _userManager.GetUserId(User);
             if (model.SelectedGoalId != null)
@@ -86,13 +95,13 @@ namespace MicroTaskTracker.Controllers
 
             try
             {
-                var roadmapId = await _roadmapService.CreateRoadmapAsync(model, userId);
+                var roadmapId = await _roadmapService.SaveRoadmapAsync(model, userId);
                 return RedirectToAction(nameof(Details), new { id = roadmapId });
             }
             catch (Exception)
             {
                 ModelState.AddModelError("", "An error occurred while saving the roadmap.");
-                return View(model);
+                return View("RoadmapForm", model);
             }
         }
 

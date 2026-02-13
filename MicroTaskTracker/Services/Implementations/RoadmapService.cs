@@ -14,64 +14,99 @@ namespace MicroTaskTracker.Services.Implementations
         {
             _context = context;
         }
-        public async Task<int> CreateRoadmapAsync(RoadmapCreateViewModel model, string userId)
+        public async Task<int> SaveRoadmapAsync(RoadmapCreateViewModel model, string userId)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                int goalId;
+                Roadmap roadmap;
 
-                // 1. Logic for New vs Existing Goal
-                if (model.SelectedGoalId.HasValue && model.SelectedGoalId.Value > 0)
+                if (model.IsEditing && model.RoadmapId.HasValue)
                 {
-                    goalId = model.SelectedGoalId.Value;
+                    roadmap = await _context.Roadmaps
+                        .Include(r => r.Actions)
+                        .FirstOrDefaultAsync(r => r.Id == model.RoadmapId && r.UserId == userId);
+
+                    if (roadmap == null)
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+
+                    roadmap.Why = model.Why;
+                    roadmap.IdealOutcome = model.IdealOutcome;
+
+                    var incomingActionIds = model.Actions.Select(a => a.Id).Where(id => id.HasValue).ToList();
+
+
+                    var actionsToRemove = roadmap.Actions.Where(a => !incomingActionIds.Contains(a.Id)).ToList();
+                    _context.Actions.RemoveRange(actionsToRemove);
+
+                    foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
+                    {
+                        if (actionVm.Id.HasValue && actionVm.Id > 0)
+                        {
+                            var existingAction = roadmap.Actions.FirstOrDefault(a => a.Id == actionVm.Id);
+                            if (existingAction != null)
+                            {
+                                existingAction.Title = actionVm.Title;
+                                existingAction.Resources = actionVm.Resources;
+                                existingAction.DueDate = actionVm.DueDate;
+                            }
+                        }
+                        else
+                        {
+                            _context.Actions.Add(new ActionItem
+                            {
+                                RoadmapId = roadmap.Id,
+                                Title = actionVm.Title,
+                                Resources = actionVm.Resources,
+                                DueDate = actionVm.DueDate,
+                                UserId = userId
+                            });
+                        }
+                    }
                 }
                 else
                 {
-                    var newGoal = new Goal
+                    int goalId = model.SelectedGoalId ?? 0;
+                    if (goalId == 0)
                     {
-                        Title = model.NewGoalTitle!,
-                        ShortDescription = model.NewGoalDescription,
+                        var newGoal = new Goal
+                        {
+                            Title = model.NewGoalTitle!,
+                            ShortDescription = model.NewGoalDescription,
+                            UserId = userId,
+                            IsActive = true
+                        };
+                        _context.Goals.Add(newGoal);
+                        await _context.SaveChangesAsync();
+                        goalId = newGoal.Id;
+                    }
+
+                    roadmap = new Roadmap
+                    {
+                        GoalId = goalId,
                         UserId = userId,
-                        IsActive = true
+                        Why = model.Why,
+                        IdealOutcome = model.IdealOutcome
                     };
-                    _context.Goals.Add(newGoal);
+                    _context.Roadmaps.Add(roadmap);
                     await _context.SaveChangesAsync();
-                    goalId = newGoal.Id;
-                }
 
-                // 2. Create the Roadmap entry
-                var roadmap = new Roadmap
-                {
-                    GoalId = goalId,
-                    UserId = userId,
-                    Why = model.Why,
-                    IdealOutcome = model.IdealOutcome
-                };
-                _context.Roadmaps.Add(roadmap);
-                await _context.SaveChangesAsync();
-
-                // 3. Add the initial Action Items
-                if (model.Actions != null && model.Actions.Any())
-                {
-                    foreach (var actionVm in model.Actions)
+                    foreach (var actionVm in model.Actions.Where(a => !string.IsNullOrWhiteSpace(a.Title)))
                     {
-                        if (string.IsNullOrWhiteSpace(actionVm.Title)) continue;
-
-                        var action = new ActionItem
+                        _context.Actions.Add(new ActionItem
                         {
                             RoadmapId = roadmap.Id,
                             Title = actionVm.Title,
                             Resources = actionVm.Resources,
                             DueDate = actionVm.DueDate,
-                            UserId = userId,
-                            IsCompleted = false
-                        };
-                        _context.Actions.Add(action);
+                            UserId = userId
+                        });
                     }
-                    await _context.SaveChangesAsync();
                 }
 
+                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return roadmap.Id;
             }
@@ -81,7 +116,7 @@ namespace MicroTaskTracker.Services.Implementations
                 throw;
             }
         }
-        
+
 
         public async Task<bool> DeleteRoadmapAsync(int roadmapId, string userId)
         {
@@ -145,7 +180,7 @@ namespace MicroTaskTracker.Services.Implementations
                     GoalTitle = r.Goal.Title,
                     GoalDescription = r.Goal.ShortDescription,
                     Why = r.Why,
-                    IdealOutcome = r.IdealOutcome,
+                    IdealOutcome = r.IdealOutcome,   
                     Actions = r.Actions.Select(a => new ActionsDisplayViewModel
                     {
                         ActionId = a.Id,
@@ -173,6 +208,34 @@ namespace MicroTaskTracker.Services.Implementations
             }
 
             return roadmap;
+        }
+
+        public async Task<RoadmapCreateViewModel?> GetRoadmapForEditAsync(int roadmapId, string userId)
+        {
+            var roadmap = await _context.Roadmaps
+                .Include(r => r.Goal)
+                .Include(r => r.Actions)
+                .FirstOrDefaultAsync(r => r.Id == roadmapId && r.UserId == userId);
+
+            if (roadmap == null) return null;
+
+            return new RoadmapCreateViewModel
+            {
+                IsEditing = true,
+                RoadmapId = roadmap.Id,
+                SelectedGoalId = roadmap.GoalId,
+                NewGoalTitle = roadmap.Goal.Title,
+                NewGoalDescription = roadmap.Goal.ShortDescription,
+                Why = roadmap.Why,
+                IdealOutcome = roadmap.IdealOutcome,
+                Actions = roadmap.Actions.Select(a => new ActionItemCreateViewModel
+                {
+                    Id = a.Id, // CRITICAL: This keeps tasks safe
+                    Title = a.Title,
+                    Resources = a.Resources,
+                    DueDate = a.DueDate
+                }).ToList()
+            };
         }
 
         public async Task<bool> LinkTaskToActionAsync(int taskId, int actionId, string userId)
