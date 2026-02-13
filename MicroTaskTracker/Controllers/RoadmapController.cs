@@ -126,20 +126,27 @@ namespace MicroTaskTracker.Controllers
             return View(roadmap);
         }
         [HttpPost]
-        public async Task<IActionResult> LinkTask(int taskId, int actionId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveAssignments(int actionId, int roadmapId, string selectedTaskIds)
         {
             var userId = _userManager.GetUserId(User);
-            var success = await _roadmapService.LinkTaskToActionAsync(taskId, actionId, userId);
 
-            if (success)
+            // Parse the comma-separated IDs from the hidden input
+            var taskIds = string.IsNullOrEmpty(selectedTaskIds)
+                ? new List<int>()
+                : selectedTaskIds.Split(',').Select(int.Parse).ToList();
+
+            // Use a loop to call existing service logic for each task
+            foreach (var taskId in taskIds)
             {
-                return Json(new { success = true });
+                await _roadmapService.LinkTaskToActionAsync(taskId, actionId, userId);
             }
-            return BadRequest();
+
+            // Redirect back to the details page of the roadmap
+            return RedirectToAction("Details", new { id = roadmapId });
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = _userManager.GetUserId(User);
@@ -175,6 +182,13 @@ namespace MicroTaskTracker.Controllers
             var userId = _userManager.GetUserId(User);
             var success = await _roadmapService.UnlinkTaskFromActionAsync(taskId, userId);
             return success ? Json(new { success = true }) : BadRequest();
+        }
+
+        // Simple helper class for the JSON data
+        public class LinkTaskRequest
+        {
+            public int TaskId { get; set; }
+            public int ActionId { get; set; }
         }
     }
 }
