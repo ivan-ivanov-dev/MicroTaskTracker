@@ -1,8 +1,22 @@
 ﻿/* Roadmap Visual Flow */
 .roadmap-page-bg {
-    background: radial-gradient(circle at top right, #f8f9fa, #e9ecef);
+    background: #fdfdfd; /* Or match your site.css background color */
     min-height: 100vh;
 }
+
+.back-to-selection {
+    text-decoration: none;
+    color: #6c757d;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+    .back-to-selection:hover {
+        color: #007bff;
+        transform: translateX(-5px);
+    }
 
 .roadmap-flow-container {
     display: flex;
@@ -35,7 +49,7 @@
     font-size: 1.5rem;
     color: white;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    margin-bottom: -30px;
+    margin-bottom: -20px;
     z-index: 3;
 }
 
@@ -68,6 +82,19 @@
         box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
     }
 
+.action-header-pill {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid #ffc107;
+    color: #856404;
+    padding: 8px 24px;
+    border-radius: 50px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 2;
+}
 /* Form Plaintext Inputs */
 .form-control:focus {
     box-shadow: none;
