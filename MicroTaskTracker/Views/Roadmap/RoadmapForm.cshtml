@@ -74,64 +74,31 @@
                     @for (int i = 0; i < Model.Actions.Count; i++)
                     {
                         <div class="col-lg-4">
-                            <div class="action-card card h-100 shadow-sm">
-                                <div class="card-body d-flex flex-column">
+                            <div class="action-card card h-100 shadow-sm border-0">
+                                <div class="card-body">
                                     <input type="hidden" asp-for="Actions[i].Id" />
-                                    <input asp-for="Actions[i].Title" class="form-control mb-2 fw-bold border-0 bg-light shadow-none" placeholder="Action Title" />
+                                    <label class="tiny-bold text-primary text-uppercase mb-1 d-block">Milestone @(i + 1)</label>
+                                    <input asp-for="Actions[i].Title" class="form-control mb-3 fw-bold border-0 bg-light shadow-none" placeholder="What needs to happen?" />
 
-                                    <div class="input-group input-group-sm mb-1">
+                                    <div class="input-group input-group-sm mb-3">
                                         <span class="input-group-text bg-transparent border-0"><i class="bi bi-calendar"></i></span>
                                         <input asp-for="Actions[i].DueDate" type="date" class="form-control border-0 shadow-none" />
                                     </div>
 
-                                    <div class="task-preview-zone flex-grow-1">
-                                        <label class="tiny-bold text-muted text-uppercase mb-2 d-block">Linked Tasks</label>
-                                        <div id="action-tasks-@Model.Actions[i].Id">
-                                            @if (Model.Actions[i].AssignedTasks != null && Model.Actions[i].AssignedTasks.Any())
-                                            {
-                                                @foreach (var task in Model.Actions[i].AssignedTasks)
-                                                {
-                                                    <div class="d-flex justify-content-between align-items-center py-1 border-bottom-dashed" id="task-item-@task.Id">
-                                                        <span class="small text-truncate me-2">@task.Title</span>
-                                                        <button type="button" class="btn btn-link btn-sm text-danger p-0" onclick="RoadmapPlanner.deleteTaskPermanently(@task.Id)">
-                                                            <i class="bi bi-x-circle-fill"></i>
-                                                        </button>
-                                                    </div>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <span class="small text-muted fst-italic">No tasks linked.</span>
-                                            }
+                                    @if (Model.IsEditing)
+                                    {
+                                        <div class="p-3 border rounded-3 bg-light">
+                                            <p class="small text-muted mb-0 text-center">
+                                                <i class="bi bi-info-circle me-1"></i> Manage tasks in the <strong>Details</strong> view after saving.
+                                            </p>
                                         </div>
-                                    </div>
-
-                                    <div class="d-flex gap-2 mt-3">
-                                        <button type="button" class="btn btn-sm btn-primary flex-grow-1"
-                                                data-modal-url="@Url.Action("Create", "Tasks", new { actionId = Model.Actions[i].Id })">
-                                            <i class="bi bi-plus-lg"></i> New
-                                        </button>
-
-                                        @if (Model.IsEditing && Model.Actions[i].Id > 0)
-                                        {
-                                            <a asp-action="Planner" asp-route-actionId="@Model.Actions[i].Id" asp-route-roadmapId="@Model.RoadmapId"
-                                               class="btn btn-sm btn-outline-secondary flex-grow-1">
-                                                <i class="bi bi-link-45deg"></i> Plan
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <button type="button" class="btn btn-sm btn-outline-secondary flex-grow-1" disabled
-                                                    title="Save the roadmap first to enable planning">
-                                                <i class="bi bi-lock-fill"></i> Plan
-                                            </button>
-                                        }
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         </div>
                     }
                 </div>
+                    
             </div>
 
             <div class="roadmap-line"></div>
