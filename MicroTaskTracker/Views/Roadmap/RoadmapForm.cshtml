@@ -109,6 +109,13 @@
                                             <input asp-for="Actions[i].DueDate" type="date" class="form-control border-0 bg-light shadow-none" />
                                         </div>
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted text-uppercase mb-1">Resources & Notes</label>
+                                        <textarea asp-for="Actions[i].Resources"
+                                                  class="form-control form-control-sm border-0 bg-light shadow-none"
+                                                  rows="2"
+                                                  placeholder="Links, tools, or references..."></textarea>
+                                    </div>
 
                                     @if (Model.IsEditing)
                                     {
