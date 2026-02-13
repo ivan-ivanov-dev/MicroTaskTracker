@@ -131,11 +131,18 @@ namespace MicroTaskTracker.Controllers
             }
             return BadRequest();
         }
-        public async Task<IActionResult> Index()
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
             var userId = _userManager.GetUserId(User);
-            var roadmaps = await _roadmapService.GetAllRoadmapsAsync(userId);
-            return View(roadmaps);
+            var success = await _roadmapService.DeleteRoadmapAsync(id, userId);
+            if (success)
+            {
+                return RedirectToAction("Selection");
+            }
+            return BadRequest();
         }
     }
 }

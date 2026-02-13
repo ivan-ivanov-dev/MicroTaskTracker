@@ -17,6 +17,7 @@
        var isAuthPage = controller == "Account" && (action == "Login" || action == "Register");
        var isDashboard = controller == "Dashboard" && action == "Index";
        var isLandingPage = controller == "Home" && action == "Index";
+       var isRoadmap = controller == "Roadmap" && (action == "Create" || action == "Details"|| action == "Edit"|| action == "Selection");
 }
 
 <body class="@(isAuthPage ? "auth-page-body" : "") @(isDashboard ? "dashboard-page-body" : "")">
@@ -172,7 +173,7 @@
         </aside>
     }
 
-    <div class="@(isAuthPage ? "auth-container-centered" : isDashboard ? "dashboard-wrapper" : "container")">
+    <div class="@(isAuthPage ? "auth-container-centered" : isDashboard ? "dashboard-wrapper" : isRoadmap ? "roadmap-wrapper" : "container")">
         <main role="main" class="main-content pb-3">
             @RenderBody()
         </main>

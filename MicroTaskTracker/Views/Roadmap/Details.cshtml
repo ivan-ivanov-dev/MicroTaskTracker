@@ -1,0 +1,129 @@
+﻿@model MicroTaskTracker.Models.ViewModels.Roadmaps.RoadmapDeatailsViewModel
+
+@{
+    ViewData["Title"] = "Strategy Details";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tasks.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/roadmap.css" asp-append-version="true" />
+}
+
+<div class="roadmap-page-bg">
+    <div class="container py-4">
+        
+        <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
+            <a asp-action="Selection" class="back-to-selection text-decoration-none">
+                <i class="bi bi-arrow-left-circle-fill fs-4 align-middle"></i>
+                <span class="ms-2 fw-medium">Back to Selection</span>
+            </a>
+
+            <div class="d-flex gap-3">
+                <a asp-action="Edit" asp-route-id="@Model.RoadmapId" class="btn btn-outline-primary rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Strategy
+                </a>
+                <button type="button" class="btn btn-outline-danger rounded-pill px-4 shadow-sm" onclick="showDeleteModal()">
+                    <i class="bi bi-trash3 me-2"></i>Delete
+                </button>
+            </div>
+        </div>
+
+        <div class="roadmap-flow-container">
+            <div class="roadmap-node" data-aos="fade-up">
+                <div class="node-icon bg-primary shadow"><i class="bi bi-geo-alt-fill"></i></div>
+                <div class="node-content card shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <label class="text-uppercase small fw-bold text-primary mb-2 d-block">The Destination</label>
+                        <h2 class="fw-bold mb-1">@Model.GoalTitle</h2>
+                        <p class="text-muted mb-0">@Model.GoalDescription</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            <div class="roadmap-node" data-aos="fade-up">
+                <div class="node-icon bg-info shadow"><i class="bi bi-lightning-charge-fill"></i></div>
+                <div class="node-content card shadow-sm border-0">
+                    <div class="card-body p-4 text-center">
+                        <label class="text-uppercase small fw-bold text-info mb-2 d-block">The Motivation</label>
+                        <p class="lead fst-italic mb-0 text-dark">"@Model.Why"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            <div class="roadmap-node wide-node" data-aos="fade-up">
+                <div class="node-icon bg-warning text-dark shadow"><i class="bi bi-stack"></i></div>
+                <div class="action-header-pill">Current Milestones</div>
+
+                <div class="row g-4 w-100">
+                    @foreach (var action in Model.Actions)
+                    {
+                        <div class="col-lg-4">
+                            <div class="action-card card h-100 shadow-sm border-0 border-top-warning">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <h5 class="fw-bold mb-0">@action.Title</h5>
+                                        @if (action.DueDate.HasValue)
+                                        {
+                                            <span class="badge bg-light text-muted border">@action.DueDate.Value.ToString("MMM dd")</span>
+                                        }
+                                    </div>
+                                    
+                                    <div class="task-branch-section mt-3">
+                                        <div class="small fw-bold text-muted mb-2"><i class="bi bi-list-check me-1"></i> Tasks:</div>
+                                        <ul class="list-unstyled mb-3">
+                                            @* In the future, we loop through tasks here *@
+                                            <li class="small text-muted fst-italic py-1">No tasks linked yet...</li>
+                                        </ul>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            <div class="roadmap-node" data-aos="fade-up">
+                <div class="node-icon bg-success shadow"><i class="bi bi-trophy-fill"></i></div>
+                <div class="node-content card shadow-sm border-0">
+                    <div class="card-body text-center p-4">
+                        <label class="text-uppercase small fw-bold text-success mb-2 d-block">The Victory</label>
+                        <h5 class="fw-bold mb-0">@Model.IdealOutcome</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-body p-5 text-center">
+                <i class="bi bi-exclamation-octagon text-danger display-1 mb-4"></i>
+                <h3 class="fw-bold">Delete Roadmap?</h3>
+                <p class="text-muted">You are about to delete this strategy and all progress associated with it. This action is permanent.</p>
+                <form asp-action="Delete" method="post" class="mt-4 d-grid gap-2">
+                    <input type="hidden" name="id" value="@Model.RoadmapId" />
+                    <button type="submit" class="btn btn-danger btn-lg">Delete Permanently</button>
+                    <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/tasks.js" asp-append-version="true"></script>
+    <script>
+        function showDeleteModal() {
+            new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
+        }
+    </script>
+}

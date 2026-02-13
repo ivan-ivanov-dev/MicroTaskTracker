@@ -18,6 +18,31 @@
         transform: translateX(-3px);
     }
 
+/* Ensure the wrapper from layout doesn't restrict the background */
+.roadmap-wrapper {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: transparent !important;
+}
+
+    /* Force the main content area to be transparent only on roadmap pages */
+    .roadmap-wrapper .main-content {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+    }
+
+/* Fix for the roadmap-page-bg to occupy full width and match app background */
+.roadmap-page-bg {
+    background-color: #f8f9fa; /* Change this to match your app's exact grey/bg color */
+    min-height: 100vh;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%); /* Centers the wide bg if still inside a container */
+    padding-top: 2rem;
+}
+
 .roadmap-flow-container {
     display: flex;
     flex-direction: column;

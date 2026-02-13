@@ -38,13 +38,14 @@ namespace MicroTaskTracker.Controllers
         /*Create Tasks*/
 
         [HttpGet]
-        public async Task<IActionResult> CreateAsync()
+        public async Task<IActionResult> CreateAsync(int? actionId)
         {
             var userId = _userManager.GetUserId(User);
             var tags = await _tagService.GetUserTagsAsync(userId);
 
             var model = new TaskCreateViewModel
             {
+                ActionId = actionId,
                 AvailableTags = tags.Select(t => new SelectListItem
                 {
                     Value = t.Id.ToString(),

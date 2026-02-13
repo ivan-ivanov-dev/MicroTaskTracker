@@ -72,7 +72,7 @@
                 <div class="node-icon bg-warning text-dark"><i class="bi bi-stack"></i></div>
 
                 <div class="action-header-pill">
-                    Strategic Milestones
+                    Set Milestones
                 </div>
 
                 <div class="row g-4 w-100">
@@ -85,6 +85,7 @@
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="badge bg-light text-dark">Step @(i + 1)</span>
                                     </div>
+
                                     <input asp-for="Actions[i].Title" class="form-control mb-3 fw-bold border-0 bg-light" placeholder="Action Title" />
 
                                     <div class="input-group input-group-sm mb-2">
@@ -92,10 +93,27 @@
                                         <input asp-for="Actions[i].DueDate" type="date" class="form-control border-0" />
                                     </div>
 
-                                    <div class="input-group input-group-sm">
+                                    <div class="input-group input-group-sm mb-3">
                                         <span class="input-group-text bg-white border-0"><i class="bi bi-link-45deg"></i></span>
                                         <input asp-for="Actions[i].Resources" class="form-control border-0" placeholder="Resources/Links" />
                                     </div>
+
+                                    @if (Model.Actions[i].Id > 0)
+                                    {
+                                        <div class="mt-auto pt-3 border-top">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary w-100 border-dashed"
+                                                    data-modal-url="@Url.Action("Create", "Tasks", new { actionId = Model.Actions[i].Id })"
+                                                    data-modal-title="Add Task to @Model.Actions[i].Title">
+                                                <i class="bi bi-plus-lg me-1"></i> Add Task
+                                            </button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mt-auto pt-3 border-top text-center">
+                                            <small class="text-muted italic">Save roadmap to add tasks</small>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
