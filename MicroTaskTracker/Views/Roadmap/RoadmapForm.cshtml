@@ -5,12 +5,20 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/tasks.css" /> @* Needed if modal uses task classes *@
-    <link rel="stylesheet" href="~/css/roadmap.css" />
+    <link rel="stylesheet" href="~/css/tasks.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/roadmap.css" asp-append-version="true" />
 }
 
 <div class="roadmap-page-bg">
-    <div class="container py-5">
+    <div class="container py-4">
+
+        <div class="mb-4 animate-fade-in">
+            <a asp-action="Selection" class="back-to-selection text-decoration-none">
+                <i class="bi bi-arrow-left-circle-fill fs-4 align-middle"></i>
+                <span class="ms-2 fw-medium">Return to Path Selection</span>
+            </a>
+        </div>
+
         <div class="text-center mb-5 animate-fade-in">
             <span class="badge rounded-pill bg-primary px-3 mb-2">ROADMAP BUILDER</span>
             <h1 class="display-4 fw-bold">@ViewData["Title"]</h1>
@@ -62,8 +70,12 @@
 
             <div class="roadmap-node wide-node" data-aos="fade-up">
                 <div class="node-icon bg-warning text-dark"><i class="bi bi-stack"></i></div>
-                <label class="form-label fw-bold text-uppercase small text-warning mt-4">Action Strategy</label>
-                <div class="row g-4 mt-1">
+
+                <div class="action-header-pill">
+                    Strategic Milestones
+                </div>
+
+                <div class="row g-4 w-100">
                     @for (int i = 0; i < Model.Actions.Count; i++)
                     {
                         <div class="col-lg-4">
@@ -104,7 +116,7 @@
                 </div>
             </div>
 
-            <div class="text-center mt-5">
+            <div class="text-center mt-5 pb-5">
                 <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg hover-up" onclick="confirmRoadmap()">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     @(Model.IsEditing ? "Save Plan Changes" : "Deploy Strategic Roadmap")
@@ -133,6 +145,6 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/tasks.js"></script> @* For task creation inside roadmap *@
-    <script src="~/js/roadmap.js"></script>
+    <script src="~/js/tasks.js" asp-append-version="true"></script>
+    <script src="~/js/roadmap.js" asp-append-version="true"></script>
 }
