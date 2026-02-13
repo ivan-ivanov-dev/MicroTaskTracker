@@ -25,6 +25,7 @@ namespace MicroTaskTracker
             builder.Services.AddScoped<IDashboardService, DashboardService>();
             builder.Services.AddScoped<ITagService, TagService>();
             builder.Services.AddScoped<IGoalService, GoalService>();
+            builder.Services.AddScoped<IRoadmapService, RoadmapService>();
 
             builder.Services.AddControllersWithViews();
 
