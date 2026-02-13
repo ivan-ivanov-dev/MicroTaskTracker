@@ -1,5 +1,138 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model MicroTaskTracker.Models.ViewModels.Roadmaps.RoadmapCreateViewModel
+
 @{
+    ViewData["Title"] = Model.IsEditing ? "Refine Your Strategy" : "Design Your Path";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tasks.css" /> @* Needed if modal uses task classes *@
+    <link rel="stylesheet" href="~/css/roadmap.css" />
+}
+
+<div class="roadmap-page-bg">
+    <div class="container py-5">
+        <div class="text-center mb-5 animate-fade-in">
+            <span class="badge rounded-pill bg-primary px-3 mb-2">ROADMAP BUILDER</span>
+            <h1 class="display-4 fw-bold">@ViewData["Title"]</h1>
+            <p class="lead text-muted">A goal without a plan is just a wish. Let's build yours.</p>
+        </div>
+
+        <form id="roadmapForm" asp-action="Save" method="post" class="roadmap-flow-container">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IsEditing" />
+            <input type="hidden" asp-for="RoadmapId" />
+
+            <div class="roadmap-node" data-aos="fade-up">
+                <div class="node-icon bg-primary"><i class="bi bi-geo-alt-fill"></i></div>
+                <div class="node-content card shadow">
+                    <div class="card-body">
+                        <label class="form-label fw-bold text-uppercase small text-primary">The Destination</label>
+                        @if (Model.SelectedGoalId.HasValue)
+                        {
+                            <input type="hidden" asp-for="SelectedGoalId" />
+                            <input type="hidden" asp-for="NewGoalTitle" />
+                            <input type="hidden" asp-for="NewGoalDescription" />
+                            <h3 class="mb-1">@Model.NewGoalTitle</h3>
+                            <p class="text-muted mb-0">@Model.NewGoalDescription</p>
+                        }
+                        else
+                        {
+                            <input asp-for="NewGoalTitle" class="form-control form-control-lg border-0 ps-0 fw-bold" placeholder="Give your goal a name..." />
+                            <hr class="my-2">
+                            <textarea asp-for="NewGoalDescription" class="form-control border-0 ps-0" rows="1" placeholder="Short description of what you want to achieve..."></textarea>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            <div class="roadmap-node" data-aos="fade-up">
+                <div class="node-icon bg-info"><i class="bi bi-lightning-charge-fill"></i></div>
+                <div class="node-content card shadow">
+                    <div class="card-body">
+                        <label class="form-label fw-bold text-uppercase small text-info">The Motivation (Why?)</label>
+                        <textarea asp-for="Why" class="form-control border-0 ps-0" rows="2" placeholder="If the 'Why' is strong enough, the 'How' is easy..."></textarea>
+                        <span asp-validation-for="Why" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            <div class="roadmap-node wide-node" data-aos="fade-up">
+                <div class="node-icon bg-warning text-dark"><i class="bi bi-stack"></i></div>
+                <label class="form-label fw-bold text-uppercase small text-warning mt-4">Action Strategy</label>
+                <div class="row g-4 mt-1">
+                    @for (int i = 0; i < Model.Actions.Count; i++)
+                    {
+                        <div class="col-lg-4">
+                            <div class="action-card card h-100 shadow-sm border-top-warning">
+                                <div class="card-body">
+                                    <input type="hidden" asp-for="Actions[i].Id" />
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="badge bg-light text-dark">Step @(i + 1)</span>
+                                    </div>
+                                    <input asp-for="Actions[i].Title" class="form-control mb-3 fw-bold border-0 bg-light" placeholder="Action Title" />
+
+                                    <div class="input-group input-group-sm mb-2">
+                                        <span class="input-group-text bg-white border-0"><i class="bi bi-calendar-event"></i></span>
+                                        <input asp-for="Actions[i].DueDate" type="date" class="form-control border-0" />
+                                    </div>
+
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text bg-white border-0"><i class="bi bi-link-45deg"></i></span>
+                                        <input asp-for="Actions[i].Resources" class="form-control border-0" placeholder="Resources/Links" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            <div class="roadmap-node" data-aos="fade-up">
+                <div class="node-icon bg-success"><i class="bi bi-trophy-fill"></i></div>
+                <div class="node-content card shadow">
+                    <div class="card-body">
+                        <label class="form-label fw-bold text-uppercase small text-success">The Victory (Ideal Outcome)</label>
+                        <textarea asp-for="IdealOutcome" class="form-control border-0 ps-0" rows="2" placeholder="Describe the moment you win..."></textarea>
+                        <span asp-validation-for="IdealOutcome" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow-lg hover-up" onclick="confirmRoadmap()">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    @(Model.IsEditing ? "Save Plan Changes" : "Deploy Strategic Roadmap")
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="saveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-body p-5 text-center">
+                <div class="success-checkmark mb-4">
+                    <i class="bi bi-send-check text-success display-1"></i>
+                </div>
+                <h3>Ready to Commit?</h3>
+                <p class="text-muted">Once saved, your strategy will be visualized in your goal center.</p>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="button" class="btn btn-primary btn-lg" onclick="finalSubmit()">Yes, Save Strategy</button>
+                    <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">I need more time to edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/tasks.js"></script> @* For task creation inside roadmap *@
+    <script src="~/js/roadmap.js"></script>
 }
