@@ -249,9 +249,15 @@ namespace MicroTaskTracker.Services.Implementations
             }
 
             task.ActionId = actionId;
-            _context.Entry(task).State = EntityState.Modified;
-
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<IEnumerable<TaskItem>> GetUnlinkedTasksAsync(string userId)
+        {
+            return await _context.Tasks
+                .Where(t => t.UserId == userId && t.ActionId == null)
+                .OrderByDescending(t => t.CreatedOn)
+                .ToListAsync();
         }
     }
 }

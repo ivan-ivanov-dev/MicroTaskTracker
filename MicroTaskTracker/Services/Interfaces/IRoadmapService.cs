@@ -18,6 +18,7 @@ namespace MicroTaskTracker.Services.Interfaces
 
         // Management
         Task<bool> LinkTaskToActionAsync(int taskId, int actionId, string userId);
+        Task<IEnumerable<TaskItem>> GetUnlinkedTasksAsync(string userId);
         Task<bool> DeleteRoadmapAsync(int roadmapId, string userId);
     }
 }
