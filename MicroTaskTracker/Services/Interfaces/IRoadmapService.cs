@@ -9,6 +9,7 @@ namespace MicroTaskTracker.Services.Interfaces
         Task<IEnumerable<Goal>> GetAvailableGoalsAsync(string userId);
         Task<RoadmapDeatailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId);
         Task<List<Roadmap>> GetAllRoadmapsAsync(string userId);
+        Task<Goal?> GetGoalByIdAsync(int goalId, string userId);
 
         // Creation
         Task<int> CreateRoadmapAsync(RoadmapCreateViewModel model, string userId);

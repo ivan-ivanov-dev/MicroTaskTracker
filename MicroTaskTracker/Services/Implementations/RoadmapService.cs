@@ -125,6 +125,16 @@ namespace MicroTaskTracker.Services.Implementations
                 .ToListAsync();
         }
 
+        public async Task<Goal?> GetGoalByIdAsync(int goalId, string userId)
+        {
+            var goal =  await _context.Goals.FirstOrDefaultAsync(g => g.Id == goalId && g.UserId == userId);
+            if(goal == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+            return goal;
+        }
+
         public async Task<RoadmapDeatailsViewModel?> GetRoadmapDetailAsync(int roadmapId, string userId)
         {
             var roadmap = await _context.Roadmaps
