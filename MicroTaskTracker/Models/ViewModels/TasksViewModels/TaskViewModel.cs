@@ -18,5 +18,6 @@ namespace MicroTaskTracker.Models.ViewModels.TasksViewModels
         public TaskPriority Priority { get; set; } = TaskPriority.Low;
         public bool IsCompleted { get; set; }
         
+        public List<string> Tags { get; set; } = new List<string>();
     }
 }

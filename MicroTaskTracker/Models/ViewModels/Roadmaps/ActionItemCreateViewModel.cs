@@ -1,0 +1,16 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MicroTaskTracker.Models.ViewModels.Roadmaps
+{
+    public class ActionItemCreateViewModel
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        public string Title { get; set; } = null!;
+
+        public string? Resources { get; set; }
+
+        public DateTime? DueDate { get; set; }
+        public bool IsCompleted { get; set; } = false;
+    }
+}
