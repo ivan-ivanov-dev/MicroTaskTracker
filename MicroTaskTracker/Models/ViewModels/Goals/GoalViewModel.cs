@@ -13,5 +13,8 @@ namespace MicroTaskTracker.Models.ViewModels.Goals
         public DateTime? TargetDate { get; set; }
         public bool IsActive { get; set; } = true;
 
+        public bool HasRoadmap { get; set; }
+        public int? RoadmapId { get; set; }
+
     }
 }

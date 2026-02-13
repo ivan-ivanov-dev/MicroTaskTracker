@@ -63,7 +63,6 @@ namespace MicroTaskTracker.Services.Implementations
                 GoalSortOrder.TitleDesc => goalsQuery.OrderByDescending(g => g.Title),
                 _ => goalsQuery
             };
-
             var goals = await goalsQuery
                 .Select(g => new GoalViewModel
                 {
@@ -71,7 +70,12 @@ namespace MicroTaskTracker.Services.Implementations
                     Title = g.Title,
                     ShortDescription = g.ShortDescription,
                     TargetDate = g.TargetDate,
-                    IsActive = g.IsActive
+                    IsActive = g.IsActive,
+                    HasRoadmap = _context.Roadmaps.Any(r => r.GoalId == g.Id),
+                    RoadmapId = _context.Roadmaps
+                        .Where(r => r.GoalId == g.Id)
+                        .Select(r => r.Id)
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
 

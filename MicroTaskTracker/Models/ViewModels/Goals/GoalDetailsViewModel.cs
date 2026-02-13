@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MicroTaskTracker.Models.ViewModels.Roadmaps;
+using System.ComponentModel.DataAnnotations;
 
 namespace MicroTaskTracker.Models.ViewModels.Goals
 {
@@ -12,6 +13,6 @@ namespace MicroTaskTracker.Models.ViewModels.Goals
         public string? ShortDescription { get; set; }
         public DateTime? TargetDate { get; set; }
         public bool IsActive { get; set; }
-        public List<ActionItemViewModel> Actions { get; set; } = new();
+        public List<ActionsDisplayViewModel> Actions { get; set; } = new();
     }
 }
