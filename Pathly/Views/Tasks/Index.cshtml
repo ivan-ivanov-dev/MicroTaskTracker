@@ -1,0 +1,173 @@
+﻿@using Pathly.Models.DBModels
+@using Pathly.Models.ViewModels.TasksViewModels
+@using Pathly.Models.ViewModels
+@model TaskListViewModel
+
+@{
+    ViewData["Title"] = "Task Inventory";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tasks.css" asp-append-version="true" />
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Task Inventory</h2>
+            <p class="text-muted small mb-0">Manage and track your strategic micro-tasks</p>
+        </div>
+
+        <a href="#"
+           class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold"
+           data-modal-url="@Url.Action("Create", "Tasks")"
+           data-modal-title="Create Task">
+            <i class="bi bi-plus-lg me-2"></i>New Task
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-5">
+        <div class="card-body p-3">
+            <form method="get" class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="SearchByTitle" class="form-control border-0 bg-light shadow-none"
+                               value="@Context.Request.Query["SearchByTitle"]" placeholder="Search tasks..." />
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="Priority" class="form-select form-select-sm border-0 bg-light shadow-none">
+                        <option value="">All Priorities</option>
+                        @foreach (var p in Enum.GetValues<TaskPriority>())
+                        {
+                            <option value="@((int)p)" selected="@(Context.Request.Query["Priority"] == ((int)p).ToString())">@p</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="IsCompleted" class="form-select form-select-sm border-0 bg-light shadow-none">
+                        <option value="">All Statuses</option>
+                        <option value="true" selected="@(Context.Request.Query["IsCompleted"] == "true")">Completed</option>
+                        <option value="false" selected="@(Context.Request.Query["IsCompleted"] == "false")">In Progress</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <input type="date" name="DueDate" class="form-control form-control-sm border-0 bg-light shadow-none"
+                           value="@Context.Request.Query["DueDate"]" />
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-dark btn-sm w-100 rounded-pill fw-bold">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var task in Model.Tasks)
+        {
+            @* Logic to map colors based on Priority *@
+            var priorityTheme = task.Priority switch
+            {
+                TaskPriority.Low => "success",
+                TaskPriority.Medium => "warning",
+                TaskPriority.High => "orange",
+                TaskPriority.Critical => "danger",
+                _ => "success"                      
+            };
+
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm task-card animate-fade-in @(task.IsCompleted ? "task-completed" : "")"
+                     data-priority-theme="@priorityTheme">
+
+                    <div class="card-body p-4 d-flex flex-column">
+
+                        @* SECTION 1: HEADER *@
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark text-truncate pe-2">@task.Title</h5>
+                            <div class="dropdown">
+                                <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                    <li><a class="dropdown-item small" href="javascript:void(0);" data-modal-url="@Url.Action("Edit", "Tasks", new { id = task.Id })" data-modal-title="Edit Task"><i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item small text-danger" href="javascript:void(0);" data-modal-url="@Url.Action("Delete", "Tasks", new { id = task.Id })" data-modal-title="Delete Task"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        @* SECTION 2: TAGS *@
+                        <div class="mb-4">
+                            <div class="d-flex flex-wrap gap-1 mb-3">
+                                @if (task.Tags != null && task.Tags.Any())
+                                {
+                                    @foreach (var tag in task.Tags)
+                                    {
+                                        <span class="badge rounded-pill bg-light text-dark border fw-normal" style="font-size: 0.7rem;">#@tag</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted small fst-italic">No tags</span>
+                                }
+                            </div>
+                            <button class="btn btn-sm btn-light w-100 rounded-pill text-muted fw-bold border-0 shadow-none"
+                                    data-modal-url="@Url.Action("Details", "Tasks", new { id = task.Id })"
+                                    data-modal-title="Task Intelligence">
+                                See Details
+                            </button>
+                        </div>
+
+                        @* SECTION 3: FOOTER *@
+                        <div class="mt-auto pt-3 border-top border-light">
+                            <div class="row align-items-center">
+                                <div class="col-7">
+                                    <div class="text-muted mb-2" style="font-size: 0.75rem;">
+                                        <i class="bi bi-clock-history me-1"></i> @(task.DueDate?.ToString("MMM dd") ?? "No date")
+                                    </div>
+                                    <form asp-action="UpdatePriority" asp-controller="Tasks" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@task.Id" />
+                                        <select name="priority"
+                                                class="form-select form-select-sm priority-select-direct pathly-dropdown bg-soft-@priorityTheme"
+                                                data-task-id="@task.Id"
+                                                asp-for="@task.Priority"
+                                                asp-items="Html.GetEnumSelectList<TaskPriority>()">
+                                        </select>
+                                    </form>
+                                </div>
+                                <div class="col-5 text-end">
+                                    <form asp-action="MarkTaskStatus" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@task.Id" />
+                                        <button type="submit" class="btn btn-status-circle @(task.IsCompleted ? "btn-success" : "btn-outline-success")">
+                                            <i class="bi @(task.IsCompleted ? "bi-check-all" : "bi-check-lg")"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="taskModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div id="taskModalBody"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/tasks.js" asp-append-version="true"></script>
+}

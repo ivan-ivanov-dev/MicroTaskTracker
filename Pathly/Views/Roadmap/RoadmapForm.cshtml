@@ -1,0 +1,167 @@
+﻿@model Pathly.Models.ViewModels.Roadmaps.RoadmapCreateViewModel
+
+@{
+    ViewData["Title"] = Model.IsEditing ? "Refine Your Strategy" : "Design Your Path";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/tasks.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/roadmap.css" asp-append-version="true" />
+}
+
+<div class="roadmap-page-bg">
+    <div class="container py-4">
+
+        <div class="text-center mb-5 animate-fade-in">
+            <h2 class="fw-bold text-dark">@(Model.IsEditing ? "Refine Strategy" : "Design Strategic Path")</h2>
+            <div class="mx-auto bg-primary" style="height: 4px; width: 60px; border-radius: 2px;"></div>
+        </div>
+
+        <div class="mb-4 animate-fade-in">
+            <a asp-action="Selection" class="back-to-selection text-decoration-none text-muted">
+                <i class="bi bi-arrow-left-circle-fill fs-4 align-middle text-primary"></i>
+                <span class="ms-2 fw-medium">Return to Path Selection</span>
+            </a>
+        </div>
+
+        @* FORM START *@
+        <form id="roadmapForm" asp-action="Save" method="post" class="roadmap-flow-container">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IsEditing" id="isEditingHidden" />
+            <input type="hidden" asp-for="RoadmapId" />
+
+            @* PHASE I: THE VISION *@
+            <div class="roadmap-node animate-fade-in">
+                <div class="node-icon bg-primary shadow"><i class="bi bi-geo-alt-fill"></i></div>
+                <div class="node-content card shadow-sm border-0 overflow-hidden">
+                    <div class="card-header bg-primary bg-gradient text-white border-0 py-2 px-4 d-flex justify-content-between align-items-center">
+                        <span class="text-uppercase small fw-bold tracking-wider">Phase I: The Vision</span>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <label asp-for="NewGoalTitle" class="form-label fw-bold text-dark small text-uppercase">Ultimate Destination</label>
+                            <input asp-for="NewGoalTitle" class="form-control form-control-lg border-0 bg-light shadow-none" placeholder="e.g. Launch Beta Version 1.0" />
+                            <span asp-validation-for="NewGoalTitle" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="NewGoalDescription" class="form-label small text-muted fw-bold text-uppercase">Context & Details</label>
+                                <textarea asp-for="NewGoalDescription" class="form-control border-0 bg-light shadow-none" rows="2" placeholder="Describe the outcome..."></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="NewGoalTargetDate" class="form-label small text-muted fw-bold text-uppercase">Target Date</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0 bg-light text-primary"><i class="bi bi-calendar-check"></i></span>
+                                    <input asp-for="NewGoalTargetDate" type="date" class="form-control border-0 bg-light shadow-none ps-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            @* PHASE II: THE MOTIVATION *@
+            <div class="roadmap-node animate-fade-in">
+                <div class="node-icon bg-info shadow text-white"><i class="bi bi-heart-fill"></i></div>
+                <div class="node-content card shadow-sm border-0 overflow-hidden">
+                    <div class="card-header bg-info bg-gradient text-white border-0 py-2 px-4 d-flex justify-content-between align-items-center">
+                        <span class="text-uppercase small fw-bold tracking-wider">Phase II: The Drive</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <label asp-for="Why" class="form-label small text-muted fw-bold text-uppercase">Purpose & Motivation</label>
+                        <textarea asp-for="Why" class="form-control border-0 bg-light shadow-none" rows="2" placeholder="What is the deeper purpose behind this goal?"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            @* PHASE III: MILESTONES *@
+            <div class="roadmap-node wide-node animate-fade-in">
+                <div class="node-icon bg-warning text-dark shadow"><i class="bi bi-stack"></i></div>
+                <div class="action-header-pill shadow-sm">Phase III: Strategy Execution</div>
+
+                <div class="row g-4 w-100">
+                    @for (int i = 0; i < Model.Actions.Count; i++)
+                    {
+                        <div class="col-lg-4">
+                            <div class="action-card card h-100 shadow-sm border-0 border-top-warning border-4">
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <input type="hidden" asp-for="Actions[i].Id" />
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="badge bg-soft-primary text-primary text-uppercase px-0">Milestone @(i + 1)</span>
+                                        <i class="bi bi-layers text-muted opacity-50"></i>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted text-uppercase mb-1">Title</label>
+                                        <input asp-for="Actions[i].Title" class="form-control fw-bold border-0 bg-light shadow-none" placeholder="Target outcome..." />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted text-uppercase mb-1">Due Date</label>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text bg-light border-0"><i class="bi bi-calendar-event text-primary"></i></span>
+                                            <input asp-for="Actions[i].DueDate" type="date" class="form-control border-0 bg-light shadow-none" />
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted text-uppercase mb-1">Resources & Notes</label>
+                                        <textarea asp-for="Actions[i].Resources"
+                                                  class="form-control form-control-sm border-0 bg-light shadow-none"
+                                                  rows="2"
+                                                  placeholder="Links, tools, or references..."></textarea>
+                                    </div>
+
+                                    @if (Model.IsEditing)
+                                    {
+                                        <div class="mt-auto pt-3 border-top">
+                                            <div class="d-flex align-items-center text-muted small">
+                                                <i class="bi bi-info-circle me-2 text-info"></i>
+                                                <span>Tasks managed via <strong>Details</strong></span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="roadmap-line"></div>
+
+            @* PHASE IV: THE VICTORY *@
+            <div class="roadmap-node animate-fade-in">
+                <div class="node-icon bg-success shadow text-white"><i class="bi bi-trophy-fill"></i></div>
+                <div class="node-content card shadow-sm border-0 overflow-hidden">
+                    <div class="card-header bg-success bg-gradient text-white border-0 py-2 px-4 d-flex justify-content-between align-items-center">
+                        <span class="text-uppercase small fw-bold tracking-wider">Phase IV: The Victory</span>
+                    </div>
+                    <div class="card-body p-4">
+                        <label asp-for="IdealOutcome" class="form-label small text-muted fw-bold text-uppercase">Ideal Outcome</label>
+                        <textarea asp-for="IdealOutcome" class="form-control border-0 bg-light shadow-none" rows="2" placeholder="Describe what success looks like..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            @* SAVE ACTION *@
+            <div class="text-center mt-5 pb-5">
+                <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 shadow-lg border-0 bg-gradient" onclick="triggerMajesticSave()">
+                    <i class="bi bi-rocket-takeoff-fill me-2"></i> Commit Strategy
+                </button>
+                <p class="text-muted small mt-3">Changes will be saved to your dashboard permanently.</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/tasks.js" asp-append-version="true"></script>
+    <script src="~/js/roadmap.js" asp-append-version="true"></script>
+}

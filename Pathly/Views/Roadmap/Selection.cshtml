@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Pathly.Models.DBModels.Goal>
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h2 class="display-6">Start Your Journey</h2>
+        <p class="text-muted">Choose how you want to build your new roadmap.</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        <div class="col-md-5">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="mb-3">
+                        <i class="bi bi-plus-circle text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h4 class="card-title">Brand New Goal</h4>
+                    <p class="card-text text-muted">Start from scratch. We'll create a new goal and a roadmap for it at the same time.</p>
+                    <div class="mt-auto">
+                        <a asp-controller="Roadmap" asp-action="Create" class="btn btn-primary w-100">
+                            Create Blank Roadmap
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="mb-3">
+                        <i class="bi bi-list-check text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h4 class="card-title">Existing Goal</h4>
+                    <p class="card-text text-muted">Select one of your current goals to build a strategic plan for it.</p>
+                    <div class="mt-auto">
+                        <button type="button" class="btn btn-outline-success w-100" data-bs-toggle="modal" data-bs-target="#goalPickerModal">
+                            Choose Existing Goal
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="goalPickerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select a Goal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                @if (!Model.Any())
+                {
+                    <p class="text-center text-muted">You have no active goals without roadmaps.</p>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var goal in Model)
+                        {
+                            <a asp-controller="Roadmap" asp-action="Create" asp-route-goalId="@goal.Id"
+                               class="list-group-item list-group-item-action">
+                                <strong>@goal.Title</strong>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

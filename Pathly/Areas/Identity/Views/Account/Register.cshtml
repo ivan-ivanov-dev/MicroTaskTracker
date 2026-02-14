@@ -1,0 +1,63 @@
+﻿@using Pathly.Models.ViewModels.Authentication
+@model SignInViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+}
+
+<div class="auth-view-wrapper">
+    <div class="back-link-wrapper">
+        <a asp-area="" asp-controller="Home" asp-action="Index">← Back to Main</a>
+    </div>
+
+    <form id="registerForm" asp-action="Register" method="post" novalidate class="auth-form">
+        @Html.AntiForgeryToken()
+        <h2>@ViewData["Title"]</h2>
+        <p class="text-muted text-center mb-4">Create your Pathly account and start organizing your goals.</p>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label">Username</label>
+            <input asp-for="UserName" class="form-control" id="UserName" placeholder="Enter username" />
+            <span asp-validation-for="UserName" class="error-text"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="Enter email" />
+            <span asp-validation-for="Email" class="error-text"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" id="Password" placeholder="Enter password" />
+            <span asp-validation-for="Password" class="error-text"></span>
+
+            <div id="passwordStrength" class="password-strength weak" aria-hidden="true">
+                <div class="bar"></div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm password" />
+            <span asp-validation-for="ConfirmPassword" class="error-text"></span>
+        </div>
+
+        <div class="auth-actions">
+            <button type="submit" class="btn btn-primary">Register</button>
+            <a asp-action="Login" class="btn btn-link">Already have an account? Login</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/auth.js"></script>
+}

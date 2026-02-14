@@ -1,0 +1,61 @@
+﻿@using Pathly.Models.ViewModels.TasksViewModels
+@model TaskCreateViewModel
+
+<form id="createTaskForm" asp-controller="Tasks" asp-action="Create" method="post" novalidate class="task-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ActionId" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DueDate" class="form-label"></label>
+        <input asp-for="DueDate" type="date" class="form-control" />
+        <span asp-validation-for="DueDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Select Tag (Only 4 allowed)</label>
+
+        @if (!Model.AvailableTags.Any())
+        {
+            <div class="alert alert-warning">
+                You don’t have any tags yet.
+                <a asp-controller="Tag" asp-action="Create">Create a tag</a>
+            </div>
+        }
+        else
+        {
+            <div class="tag-checkbox-group">
+                @foreach (var tag in Model.AvailableTags)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input tag-checker"
+                               type="checkbox"
+                               name="SelectedTagIds"
+                               value="@tag.Value" />
+                        <label class="form-check-label">@tag.Text</label>
+                    </div>
+                }
+            </div>
+            <span id="TagError" class="text-danger small d-none mt-2">
+                <i class="bi bi-exclamation-circle"></i> Please select no more than 4 tags per task.
+            </span>
+        }
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-controller="Tasks" asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>

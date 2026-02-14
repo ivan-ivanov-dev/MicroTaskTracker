@@ -1,0 +1,136 @@
+﻿@model Pathly.Models.ViewModels.Goals.GoalQueryModel
+
+@{
+    ViewData["Title"] = "My Goals";
+}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Goals</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            + Create Goal
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <form method="get" class="mb-4 p-3 border rounded bg-light">
+        <div class="row g-3 align-items-end">
+
+            <div class="col-md-6">
+                <label class="form-label">Search by title</label>
+                <input type="text"
+                       name="SearchTerm"
+                       value="@Model.SearchTerm"
+                       class="form-control"
+                       placeholder="Search goals..." />
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Sort by title</label>
+                <select name="SortOrder" class="form-select">
+                    <option value="0" selected="@(Model.SortOrder == Pathly.Models.ViewModels.Goals.GoalSortOrder.TitleAsc)">
+                        Ascending
+                    </option>
+                    <option value="1" selected="@(Model.SortOrder == Pathly.Models.ViewModels.Goals.GoalSortOrder.TitleDesc)">
+                        Descending
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    Apply
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+    <!-- Goals grid -->
+    <div class="row g-4">
+        @if (!Model.Goals.Goals.Any())
+        {
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No goals found.
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var goal in Model.Goals.Goals)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm position-relative">
+
+                        <!-- Three dots dropdown -->
+                        <div class="dropdown position-absolute top-0 end-0 m-2">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown">
+                                ⋮
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@goal.Id">Details</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@goal.Id">Edit</a>
+                                </li>
+                                <li>
+                                    <form asp-action="Delete" asp-route-id="@goal.Id" method="post" class="m-0">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@goal.Title</h5>
+
+                            @if (!string.IsNullOrEmpty(goal.ShortDescription))
+                            {
+                                <p class="card-text text-muted">
+                                    @goal.ShortDescription
+                                </p>
+                            }
+
+                            <div class="mt-auto">
+                                @if (goal.TargetDate.HasValue)
+                                {
+                                    <div class="small text-muted mb-2">
+                                        Target: @goal.TargetDate.Value.ToShortDateString()
+                                    </div>
+                                }
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge @(goal.IsActive ? "bg-success" : "bg-secondary")">
+                                        @(goal.IsActive ? "Active" : "Inactive")
+                                    </span>
+
+                                    @if (goal.HasRoadmap)
+                                    {
+                                        <a asp-controller="Roadmap" asp-action="Details" asp-route-id="@goal.RoadmapId"
+                                           class="btn btn-info btn-sm">
+                                            <i class="bi bi-eye"></i> View Roadmap
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Roadmap" asp-action="Create" asp-route-goalId="@goal.Id"
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-map"></i> + Roadmap
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</div>

@@ -1,0 +1,93 @@
+﻿@model Pathly.Models.ViewModels.Dashboard.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
+<div class="py-5">
+    @* Welcome Header *@
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-dark">Welcome back, @User.Identity.Name!</h1>
+        <p class="lead text-muted" id="dashboard-greeting">Your journey is 1% better every day.</p>
+    </div>
+
+    @* Stats Overview Card *@
+    <div class="card border-0 shadow-sm rounded-4 mb-5">
+        <div class="card-body p-4">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6 border-md-end">
+                    <div class="px-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-bold small text-uppercase text-primary">Today's Focus</span>
+                            <span class="fw-bold small text-dark">@Model.Stats.CompletedTasksDueToday / @Model.Stats.TotalTasksDueToday</span>
+                        </div>
+                        <div class="progress">
+                            @{
+                                var todayPct = Model.Stats.TotalTasksDueToday > 0 ? (Model.Stats.CompletedTasksDueToday * 100 / Model.Stats.TotalTasksDueToday) : 0;
+                            }
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: @todayPct%;" aria-valuenow="@todayPct" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="px-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-bold small text-uppercase text-success">Overall Momentum</span>
+                            @{
+                                var totalPct = Model.Stats.TotalTasks > 0 ? (Model.Stats.CompletedTasks * 100 / Model.Stats.TotalTasks) : 0;
+                            }
+                            <span class="fw-bold small text-dark">@totalPct%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @totalPct%;" aria-valuenow="@totalPct" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Action Cards Grid *@
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 path-card">
+                <div class="card-body text-center p-4 d-flex flex-column">
+                    <div class="path-card-icon-circle bg-purple-soft mx-auto mb-3">🎯</div>
+                    <h5 class="card-title fw-bold">Set a Goal</h5>
+                    <p class="card-text text-muted small flex-grow-1">Define your destination. Big dreams start with clear targets.</p>
+                    <a href="#" class="btn btn-light w-100 fw-bold disabled">Coming Soon</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 path-card border-top border-primary border-4">
+                <div class="card-body text-center p-4 d-flex flex-column">
+                    <div class="path-card-icon-circle bg-teal-soft mx-auto mb-3">🗺️</div>
+                    <h5 class="card-title fw-bold text-primary">Build Roadmap</h5>
+                    <p class="card-text text-muted small flex-grow-1">Trace the steps. Break mountains into manageable hills.</p>
+                    <a href="#" class="btn btn-light w-100 fw-bold disabled">Coming Soon</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 path-card">
+                <div class="card-body text-center p-4 d-flex flex-column">
+                    <div class="path-card-icon-circle bg-orange-soft mx-auto mb-3">⚡</div>
+                    <h5 class="card-title fw-bold">Take Action</h5>
+                    <p class="card-text text-muted small flex-grow-1">The daily grind. Small habits built today lead to success.</p>
+                    <a asp-controller="Tasks" asp-action="Index" class="btn btn-primary w-100 fw-bold text-white shadow-sm">Go to Tasks</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts 
+{
+    <script src="~/js/dashboard.js"></script>
+}
