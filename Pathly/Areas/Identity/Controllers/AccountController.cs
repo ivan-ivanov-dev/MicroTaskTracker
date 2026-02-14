@@ -78,7 +78,7 @@ namespace Pathly.Web.Areas.Identity.Controllers
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
-            ModelState.AddModelError("", "Invalid login attempt.");
+            ModelState.AddModelError("", "Incorrect email or password");
 
             return View(loginViewModel);
         }
