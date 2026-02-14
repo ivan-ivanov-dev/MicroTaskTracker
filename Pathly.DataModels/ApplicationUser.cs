@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Pathly.Models.DBModels
+namespace Pathly.DataModels
 {
     public class ApplicationUser: IdentityUser
     {

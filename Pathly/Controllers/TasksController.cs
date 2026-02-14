@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
-using Pathly.Models.DBModels;
+using Pathly.DataModels;
 using Pathly.Models.ViewModels.TasksViewModels;
 using Pathly.Services.Interfaces;
 using System.Threading.Tasks;

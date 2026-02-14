@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Pathly.Models.DBModels;
+using Pathly.DataModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.Models.ViewModels.TasksViewModels

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
+using Pathly.DataModels;
 using Pathly.Models.DBModels;
 using Pathly.Models.ViewModels.Roadmaps;
 using Pathly.Models.ViewModels.TasksViewModels;

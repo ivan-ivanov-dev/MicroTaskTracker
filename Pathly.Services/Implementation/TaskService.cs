@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
+using Pathly.DataModels;
 using Pathly.Models.DBModels;
 using Pathly.Models.ViewModels;
 using Pathly.Models.ViewModels.TasksViewModels;

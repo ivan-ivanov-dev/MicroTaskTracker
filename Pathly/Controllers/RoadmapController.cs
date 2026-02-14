@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Pathly.Models.DBModels;
+using Pathly.DataModels;
 using Pathly.Models.ViewModels.Roadmaps;
 using Pathly.Models.ViewModels.TasksViewModels;
 using Pathly.Services.Interfaces;

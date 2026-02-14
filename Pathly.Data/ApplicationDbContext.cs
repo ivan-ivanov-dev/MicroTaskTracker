@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Pathly.Models.DBModels;
+using Pathly.DataModels;
 
 namespace Pathly.Data
 {

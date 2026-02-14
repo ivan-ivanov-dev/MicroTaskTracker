@@ -1,4 +1,4 @@
-﻿using Pathly.Models.DBModels;
+﻿using Pathly.DataModels;
 using Pathly.Models.ViewModels.TasksViewModels;
 
 namespace Pathly.Services.Interfaces

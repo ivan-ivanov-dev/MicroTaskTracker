@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
-using Pathly.Models.DBModels;
+using Pathly.DataModels;
 using Pathly.Models.ViewModels.Dashboard;
 using Pathly.Services.Interfaces;
 

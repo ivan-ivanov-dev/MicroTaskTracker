@@ -1,4 +1,4 @@
-﻿namespace Pathly.Models.DBModels
+﻿namespace Pathly.DataModels
 {
     public class TaskTag
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Pathly.GCommon;
 
-namespace Pathly.Models.DBModels
+namespace Pathly.DataModels
 {
     public class ActionItem
     {

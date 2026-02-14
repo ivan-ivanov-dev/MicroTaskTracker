@@ -1,6 +1,6 @@
 ﻿using Pathly.GCommon;
 using System.ComponentModel.DataAnnotations;
-namespace Pathly.Models.DBModels
+namespace Pathly.DataModels
 {
     public class TaskItem
     {

@@ -1,4 +1,4 @@
-﻿using Pathly.Models.DBModels;
+﻿using Pathly.DataModels;
 
 namespace Pathly.Models.ViewModels.Roadmaps
 {
