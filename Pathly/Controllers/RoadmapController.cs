@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Pathly.DataModels;
 using Pathly.Models.ViewModels.Roadmaps;
-using Pathly.Models.ViewModels.TasksViewModels;
 using Pathly.Services.Contracts;
+using Pathly.ViewModels.Roadmaps;
+using Pathly.ViewModels.TasksViewModels;
 using System.Security.Claims;
 using System.Threading.Tasks;
 

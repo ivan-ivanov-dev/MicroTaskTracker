@@ -1,4 +1,5 @@
-﻿@model Pathly.Models.ViewModels.Goals.GoalQueryModel
+﻿@using Pathly.ViewModels.Goals
+@model GoalQueryModel
 
 @{
     ViewData["Title"] = "My Goals";
@@ -30,10 +31,10 @@
             <div class="col-md-4">
                 <label class="form-label">Sort by title</label>
                 <select name="SortOrder" class="form-select">
-                    <option value="0" selected="@(Model.SortOrder == Pathly.Models.ViewModels.Goals.GoalSortOrder.TitleAsc)">
+                    <option value="0" selected="@(Model.SortOrder == GoalSortOrder.TitleAsc)">
                         Ascending
                     </option>
-                    <option value="1" selected="@(Model.SortOrder == Pathly.Models.ViewModels.Goals.GoalSortOrder.TitleDesc)">
+                    <option value="1" selected="@(Model.SortOrder == GoalSortOrder.TitleDesc)">
                         Descending
                     </option>
                 </select>

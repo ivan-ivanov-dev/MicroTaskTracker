@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pathly.DataModels;
-using Pathly.Models.ViewModels.Authentication;
+using Pathly.ViewModels.Authentication;
 using System.Threading.Tasks;
 
 namespace Pathly.Areas.Identity.Controllers

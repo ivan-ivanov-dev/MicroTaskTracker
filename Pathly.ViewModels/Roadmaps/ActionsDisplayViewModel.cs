@@ -1,6 +1,6 @@
-﻿using Pathly.Models.ViewModels.TasksViewModels;
+﻿using Pathly.ViewModels.TasksViewModels;
 
-namespace Pathly.Models.ViewModels.Roadmaps
+namespace Pathly.ViewModels.Roadmaps
 {
     public class ActionsDisplayViewModel
     {

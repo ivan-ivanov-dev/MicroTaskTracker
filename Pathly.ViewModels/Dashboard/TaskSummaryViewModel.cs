@@ -1,7 +1,7 @@
 ﻿using Pathly.DataModels;
 using System.ComponentModel.DataAnnotations;
 
-namespace Pathly.Models.ViewModels.Dashboard
+namespace Pathly.ViewModels.Dashboard
 {
     public class TaskSummaryViewModel
     {

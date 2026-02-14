@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using Pathly.DataModels;
-using Pathly.Models.ViewModels.Goals;
 using Pathly.Services.Contracts;
+using Pathly.ViewModels.Goals;
 using System.Threading.Tasks;
 
 namespace Pathly.Controllers

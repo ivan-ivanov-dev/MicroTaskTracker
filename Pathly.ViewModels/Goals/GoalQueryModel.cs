@@ -1,4 +1,4 @@
-﻿namespace Pathly.Models.ViewModels.Goals
+﻿namespace Pathly.ViewModels.Goals
 {
     public class GoalQueryModel
     {

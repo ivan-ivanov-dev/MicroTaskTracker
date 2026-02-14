@@ -1,6 +1,6 @@
 ﻿using Pathly.DataModels;
 
-namespace Pathly.Models.ViewModels.Roadmaps
+namespace Pathly.ViewModels.Roadmaps
 {
     // This view model is used to display the roadmap planner page,
     // where users can see unlinked tasks and link them to actions.

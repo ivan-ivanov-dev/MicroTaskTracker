@@ -1,4 +1,4 @@
-﻿namespace Pathly.Models.ViewModels.TasksViewModels
+﻿namespace Pathly.ViewModels.TasksViewModels
 {
     public class TaskListViewModel: TaskViewModel
     {

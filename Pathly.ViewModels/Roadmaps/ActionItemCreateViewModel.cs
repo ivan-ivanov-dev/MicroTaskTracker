@@ -1,7 +1,7 @@
-﻿using Pathly.Models.ViewModels.TasksViewModels;
+﻿using Pathly.ViewModels.TasksViewModels;
 using System.ComponentModel.DataAnnotations;
 
-namespace Pathly.Models.ViewModels.Roadmaps
+namespace Pathly.ViewModels.Roadmaps
 {
     public class ActionItemCreateViewModel
     {

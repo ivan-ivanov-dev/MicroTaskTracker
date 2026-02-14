@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pathly.Models.ViewModels.Authentication
+namespace Pathly.ViewModels.Authentication
 {
     public class SignInViewModel
     {

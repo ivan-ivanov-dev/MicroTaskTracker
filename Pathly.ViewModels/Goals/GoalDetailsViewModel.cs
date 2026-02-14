@@ -1,7 +1,7 @@
-﻿using Pathly.Models.ViewModels.Roadmaps;
+﻿using Pathly.ViewModels.Roadmaps;
 using System.ComponentModel.DataAnnotations;
 
-namespace Pathly.Models.ViewModels.Goals
+namespace Pathly.ViewModels.Goals
 {
     public class GoalDetailsViewModel
     {

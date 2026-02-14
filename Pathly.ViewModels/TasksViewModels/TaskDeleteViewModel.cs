@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pathly.Models.ViewModels.TasksViewModels
+namespace Pathly.ViewModels.TasksViewModels
 {
     public class TaskDeleteViewModel
     {

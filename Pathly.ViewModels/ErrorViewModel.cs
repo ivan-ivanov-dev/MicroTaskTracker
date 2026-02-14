@@ -1,4 +1,4 @@
-namespace Pathly.Models.ViewModels
+namespace Pathly.ViewModels
 {
     public class ErrorViewModel
     {

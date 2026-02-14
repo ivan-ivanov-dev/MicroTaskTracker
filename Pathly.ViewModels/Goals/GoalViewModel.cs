@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pathly.Models.ViewModels.Goals
+namespace Pathly.ViewModels.Goals
 {
     public class GoalViewModel
     {

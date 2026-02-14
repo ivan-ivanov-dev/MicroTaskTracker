@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Pathly.Models.ViewModels.Tags
+namespace Pathly.ViewModels.Tags
 {
     public class TagViewModel
     {

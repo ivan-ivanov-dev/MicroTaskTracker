@@ -1,4 +1,4 @@
-﻿namespace Pathly.Models.ViewModels.Dashboard
+﻿namespace Pathly.ViewModels.Dashboard
 {
     public class DashboardStatsViewModel
     {
