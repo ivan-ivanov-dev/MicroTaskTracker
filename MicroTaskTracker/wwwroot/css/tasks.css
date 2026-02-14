@@ -117,13 +117,13 @@
 .pathly-dropdown {
     border: none !important;
     font-weight: 700;
-    font-size: 0.75rem !important;
-    padding: 0.25rem 0.5rem !important;
-    border-radius: 8px !important;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: auto;
-    display: inline-block;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 1.5rem !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 10px 10px;
 }
 
     .pathly-dropdown:focus {
@@ -145,33 +145,41 @@
         transform: scale(1.1);
     }
 
-.task-card[data-priority-color="danger"] {
-    border-top: 4px solid #dc3545 !important;
+.task-card[data-priority-theme="success"] {
+    border-top-color: #198754 !important;
 }
 
-.task-card[data-priority-color="warning"] {
-    border-top: 4px solid #ffc107 !important;
+.task-card[data-priority-theme="warning"] {
+    border-top-color: #ffc107 !important;
 }
 
-.task-card[data-priority-color="primary"] {
-    border-top: 4px solid #0d6efd !important;
+.task-card[data-priority-theme="orange"] {
+    border-top-color: #fd7e14 !important;
 }
 
-.bg-soft-danger {
-    background-color: rgba(220, 53, 69, 0.1) !important;
-    color: #dc3545;
+.task-card[data-priority-theme="danger"] {
+    border-top-color: #dc3545 !important;
+}
+
+.bg-soft-success {
+    background-color: rgba(25, 135, 84, 0.12) !important;
+    color: #198754 !important;
 }
 
 .bg-soft-warning {
     background-color: rgba(255, 193, 7, 0.15) !important;
-    color: #856404;
+    color: #856404 !important;
 }
 
-.bg-soft-primary {
-    background-color: rgba(13, 110, 253, 0.1) !important;
-    color: #0d6efd;
+.bg-soft-orange {
+    background-color: rgba(253, 126, 20, 0.12) !important;
+    color: #d9480f !important;
 }
 
+.bg-soft-danger {
+    background-color: rgba(220, 53, 69, 0.12) !important;
+    color: #dc3545 !important;
+}
 .task-completed {
     background-color: #f8f9fa !important;
     opacity: 0.8;

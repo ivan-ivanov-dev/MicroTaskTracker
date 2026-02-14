@@ -70,13 +70,23 @@
     <div class="row g-4">
         @foreach (var task in Model.Tasks)
         {
+            @* Logic to map colors based on Priority *@
+            var priorityTheme = task.Priority switch
+            {
+                TaskPriority.Low => "success",
+                TaskPriority.Medium => "warning",
+                TaskPriority.High => "orange",
+                TaskPriority.Critical => "danger",
+                _ => "success"                      
+            };
+
             <div class="col-lg-4 col-md-6">
                 <div class="card h-100 border-0 shadow-sm task-card animate-fade-in @(task.IsCompleted ? "task-completed" : "")"
-                     data-priority-color="@(task.Priority == TaskPriority.High ? "danger" : task.Priority == TaskPriority.Medium ? "warning" : "primary")">
+                     data-priority-theme="@priorityTheme">
 
                     <div class="card-body p-4 d-flex flex-column">
 
-                        @* SECTION 1: HEADER (Title & Dots) *@
+                        @* SECTION 1: HEADER *@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="fw-bold mb-0 text-dark text-truncate pe-2">@task.Title</h5>
                             <div class="dropdown">
@@ -84,14 +94,14 @@
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                    <li><a class="dropdown-item small" href="#" data-modal-url="@Url.Action("Edit", "Tasks", new { id = task.Id })" data-modal-title="Edit Task"><i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                    <li><a class="dropdown-item small" href="javascript:void(0);" data-modal-url="@Url.Action("Edit", "Tasks", new { id = task.Id })" data-modal-title="Edit Task"><i class="bi bi-pencil me-2"></i>Edit</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item small text-danger" href="#" data-modal-url="@Url.Action("Delete", "Tasks", new { id = task.Id })" data-modal-title="Delete Task"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                                    <li><a class="dropdown-item small text-danger" href="javascript:void(0);" data-modal-url="@Url.Action("Delete", "Tasks", new { id = task.Id })" data-modal-title="Delete Task"><i class="bi bi-trash me-2"></i>Delete</a></li>
                                 </ul>
                             </div>
                         </div>
 
-                        @* SECTION 2: CONTENT (Tags & Details) *@
+                        @* SECTION 2: TAGS *@
                         <div class="mb-4">
                             <div class="d-flex flex-wrap gap-1 mb-3">
                                 @if (task.Tags != null && task.Tags.Any())
@@ -113,18 +123,18 @@
                             </button>
                         </div>
 
-                        @* SECTION 3: FOOTER (Due, Priority & Status) *@
+                        @* SECTION 3: FOOTER *@
                         <div class="mt-auto pt-3 border-top border-light">
                             <div class="row align-items-center">
                                 <div class="col-7">
                                     <div class="text-muted mb-2" style="font-size: 0.75rem;">
-                                        <i class="bi bi-clock-history me-1"></i> @(task.DueDate?.ToString("MMM dd, yyyy") ?? "No date")
+                                        <i class="bi bi-clock-history me-1"></i> @(task.DueDate?.ToString("MMM dd") ?? "No date")
                                     </div>
                                     <form asp-action="UpdatePriority" asp-controller="Tasks" method="post">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="id" value="@task.Id" />
                                         <select name="priority"
-                                                class="form-select form-select-sm priority-select-direct pathly-dropdown @(task.Priority == TaskPriority.High ? "bg-soft-danger" : task.Priority == TaskPriority.Medium ? "bg-soft-warning" : "bg-soft-primary")"
+                                                class="form-select form-select-sm priority-select-direct pathly-dropdown bg-soft-@priorityTheme"
                                                 data-task-id="@task.Id"
                                                 asp-for="@task.Priority"
                                                 asp-items="Html.GetEnumSelectList<TaskPriority>()">
@@ -135,15 +145,13 @@
                                     <form asp-action="MarkTaskStatus" method="post">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="id" value="@task.Id" />
-                                        <button type="submit" class="btn btn-status-circle @(task.IsCompleted ? "btn-success" : "btn-outline-success")"
-                                                title="@(task.IsCompleted ? "Reopen Task" : "Complete Task")">
+                                        <button type="submit" class="btn btn-status-circle @(task.IsCompleted ? "btn-success" : "btn-outline-success")">
                                             <i class="bi @(task.IsCompleted ? "bi-check-all" : "bi-check-lg")"></i>
                                         </button>
                                     </form>
                                 </div>
-                            </div>
+                            </div>                       
                         </div>
-
                     </div>
                 </div>
             </div>

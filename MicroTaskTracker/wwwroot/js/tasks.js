@@ -54,9 +54,9 @@
 
     handlePriorityUpdate: function (e) {
         const select = e.target;
-        const newPriority = select.value;
-        const form = select.closest('form');
+        const newPriority = select.value; 
         const card = select.closest('.task-card');
+        const form = select.closest('form');
 
         fetch(form.action, {
             method: "POST",
@@ -65,13 +65,12 @@
         })
             .then(response => {
                 if (response.ok) {
-                    select.classList.remove('bg-soft-danger', 'bg-soft-warning', 'bg-soft-primary');
+                    const themes = { "1": "success", "2": "warning", "3": "orange", "4": "danger" };
+                    const newTheme = themes[newPriority] || "success";
 
-                    const colorMap = { "0": "primary", "1": "warning", "2": "danger" };
-                    const colorClass = `bg-soft-${colorMap[newPriority]}`;
-                    select.classList.add(colorClass);
+                    select.className = `form-select form-select-sm priority-select-direct pathly-dropdown bg-soft-${newTheme}`;
 
-                    card.setAttribute('data-priority-color', colorMap[newPriority]);
+                    card.setAttribute('data-priority-theme', newTheme);
                 }
             });
     },
