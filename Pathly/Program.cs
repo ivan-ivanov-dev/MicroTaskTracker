@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Pathly.Data;
-using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Pathly.DataModels;
 using Pathly.Services.Contracts;
 using Pathly.Services.Implementation;
@@ -15,10 +13,13 @@ namespace Pathly.Web
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlite(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqliteOptions => sqliteOptions.MigrationsAssembly("Pathly.Data")
+                )
+            );
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
