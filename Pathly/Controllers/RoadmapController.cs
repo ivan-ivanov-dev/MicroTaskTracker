@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Pathly.DataModels;
-using Pathly.Models.ViewModels.Roadmaps;
 using Pathly.Services.Contracts;
 using Pathly.ViewModels.Roadmaps;
 using Pathly.ViewModels.TasksViewModels;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Pathly.Web.Controllers
 {
