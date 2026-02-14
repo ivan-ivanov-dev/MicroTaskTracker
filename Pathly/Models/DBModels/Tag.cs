@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pathly.GCommon;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pathly.Models.DBModels
@@ -9,7 +10,7 @@ namespace Pathly.Models.DBModels
         
         public int Id { get; set; }
         [Required]
-        [StringLength(30,ErrorMessage ="Tag name cannot exceed 30 characters")]
+        [MaxLength(ValidationConstants.MaxTagNameLength,ErrorMessage ="Tag name cannot exceed 30 characters")]
         public string Name { get; set; } = null!;
 
         [Required]

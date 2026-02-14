@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Pathly.GCommon;
+using System.ComponentModel.DataAnnotations;
 namespace Pathly.Models.DBModels
 {
     public class TaskItem
@@ -6,10 +7,10 @@ namespace Pathly.Models.DBModels
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
-        [StringLength(100,ErrorMessage = "Title cannot exceed 100 characters")]
+        [MaxLength(ValidationConstants.MaxTaskItemTitleLength,ErrorMessage = "Title cannot exceed 100 characters")]
         public string Title { get; set; } = null!;
 
-        [StringLength(500,ErrorMessage = "Description cannot exceed 500 characters")]
+        [MaxLength(ValidationConstants.MaxTaskItemDescriptionLength,ErrorMessage = "Description cannot exceed 500 characters")]
         public string? Description { get; set; }
 
         public TaskPriority Priority { get; set; } = TaskPriority.Low;

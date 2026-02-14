@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Pathly.GCommon;
 
 namespace Pathly.Models.DBModels
 {
@@ -7,11 +8,10 @@ namespace Pathly.Models.DBModels
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        [MaxLength(ValidationConstants.MaxActionItemTitleLength, ErrorMessage = "Title cannot exceed 100 characters")]
         public string Title { get; set; } = null!;
 
-
-        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
+        [MaxLength(ValidationConstants.MaxActionItemResourcesLength, ErrorMessage = "Description cannot exceed 500 characters")]
         public string? Resources { get; set; }
         public DateTime? DueDate { get; set; }
         public bool IsCompleted { get; set; } = false;
