@@ -294,11 +294,6 @@ namespace MicroTaskTracker.Services.Implementations
                 throw new UnauthorizedAccessException();
             }
 
-            if (task.ActionId == null)
-            {
-                return false; // Already unlinked
-            }
-
             task.ActionId = null; // Remove the link
             return await _context.SaveChangesAsync() > 0;
         }

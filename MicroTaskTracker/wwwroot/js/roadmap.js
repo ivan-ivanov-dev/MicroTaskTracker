@@ -33,14 +33,17 @@ function showDeleteModal() {
 }
 
 var RoadmapDetails = {
-    unlinkTask: function (taskId) {
+    unlinkTask: function (taskId, url) {
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
         const element = document.getElementById(`task-item-${taskId}`);
 
+        if (!element) return;
+
         element.style.opacity = "0.5";
 
-        fetch(url + '?taskId=' + taskId, { 
+        fetch(`${url}?taskId=${taskId}`, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: {
                 'RequestVerificationToken': token,
                 'X-Requested-With': 'XMLHttpRequest'
@@ -49,17 +52,18 @@ var RoadmapDetails = {
             .then(response => {
                 if (response.ok) {
                     element.style.transition = "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
-                    element.style.transform = "translateX(30px)";
+                    element.style.transform = "translateX(40px)";
                     element.style.opacity = "0";
+
                     setTimeout(() => element.remove(), 400);
                 } else {
                     element.style.opacity = "1";
-                    alert("Error unlinking task.");
+                    alert("Server error: Could not unlink task.");
                 }
             })
             .catch(err => {
                 element.style.opacity = "1";
-                console.error("Fetch error:", err);
+                console.error("Connection error:", err);
             });
     }
 };

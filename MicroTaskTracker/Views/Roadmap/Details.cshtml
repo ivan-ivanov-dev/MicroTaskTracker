@@ -11,9 +11,9 @@
 
 
 <div class="roadmap-page-bg">
-    @Html.AntiForgeryToken()
+    
     <div class="container py-4">
-
+        @Html.AntiForgeryToken()
         @* TOP NAVIGATION BAR *@
         <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
             <a asp-action="Selection" class="back-to-selection text-decoration-none text-muted">
@@ -105,7 +105,7 @@
                                                             <i class="bi bi-dot text-primary fs-4 flex-shrink-0"></i>
                                                             <span class="text-truncate" title="@task.Title">@task.Title</span>
                                                         </div>
-                                                        <button type="button" class="unlink-action-btn" onclick="RoadmapDetails.unlinkTask('@task.Id', '@Url.Action("UnlinkTask", "Roadmaps")')">
+                                                        <button type="button" class="unlink-action-btn" onclick="RoadmapDetails.unlinkTask('@task.Id', '@Url.Action("UnlinkTask", "Roadmap")')">
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     </li>

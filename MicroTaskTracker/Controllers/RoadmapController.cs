@@ -176,13 +176,16 @@ namespace MicroTaskTracker.Controllers
         }
 
         [HttpPost]
-        [Route("Roadmaps/UnlinkTask")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UnlinkTask([FromQuery] int taskId)
+        public async Task<IActionResult> UnlinkTask(int taskId)
         {
             var userId = _userManager.GetUserId(User);
             var success = await _roadmapService.UnlinkTaskFromActionAsync(taskId, userId);
-            return success ? Json(new { success = true }) : BadRequest();
+            if(success)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
 
         // Simple helper class for the JSON data
