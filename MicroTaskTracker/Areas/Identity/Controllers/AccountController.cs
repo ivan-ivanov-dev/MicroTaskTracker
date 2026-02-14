@@ -5,8 +5,9 @@ using MicroTaskTracker.Models.DBModels;
 using MicroTaskTracker.Models.ViewModels.Authentication;
 using System.Threading.Tasks;
 
-namespace MicroTaskTracker.Controllers
+namespace MicroTaskTracker.Areas.Identity.Controllers
 {
+    [Area("Identity")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -42,7 +43,7 @@ namespace MicroTaskTracker.Controllers
             if(result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
 
             foreach(var error in result.Errors)
@@ -74,7 +75,7 @@ namespace MicroTaskTracker.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
@@ -88,7 +89,7 @@ namespace MicroTaskTracker.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "Account", new { area = "Identity" });
         }
     }
 }
